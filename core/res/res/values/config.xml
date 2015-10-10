@@ -2322,4 +2322,7 @@
 
     <!-- External CM Services list -->
     <string-array name="config_externalCMServices"></string-array>
+    
+    <!-- Show device hardware info in About device -->
+    <bool name="config_displayHardwareInfo">false</bool>
 </resources>
