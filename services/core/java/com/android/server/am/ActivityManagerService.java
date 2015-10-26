@@ -260,6 +260,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public final class ActivityManagerService extends ActivityManagerNative
         implements Watchdog.Monitor, BatteryStatsImpl.BatteryCallback {
@@ -480,6 +482,8 @@ public final class ActivityManagerService extends ActivityManagerNative
      * The package name of the DeviceOwner. This package is not permitted to have its data cleared.
      */
     String mDeviceOwnerName;
+
+    SimpleDateFormat mTraceDateFormat = new SimpleDateFormat("dd_MMM_HH_mm_ss.SSS");
 
     public class PendingAssistExtras extends Binder implements Runnable {
         public final ActivityRecord activity;
@@ -5071,6 +5075,24 @@ public final class ActivityManagerService extends ActivityManagerNative
                     annotation != null ? "ANR " + annotation : "ANR",
                     info.toString());
 
+            //Set the trace file name to app name + current date format to avoid overrinding trace file
+            String tracesPath = SystemProperties.get("dalvik.vm.stack-trace-file", null);
+            if (tracesPath != null && tracesPath.length() != 0) {
+                File traceRenameFile = new File(tracesPath);
+                String newTracesPath;
+                int lpos = tracesPath.lastIndexOf (".");
+                if (-1 != lpos)
+                    newTracesPath = tracesPath.substring (0, lpos) + "_" + app.processName + "_" + mTraceDateFormat.format(new Date()) + tracesPath.substring (lpos);
+                else
+                    newTracesPath = tracesPath + "_" + app.processName;
+
+                traceRenameFile.renameTo(new File(newTracesPath));
+                Process.sendSignal(app.pid, 6);
+                SystemClock.sleep(1000);
+                Process.sendSignal(app.pid, 6);
+                SystemClock.sleep(1000);
+            }
+
             // Bring up the infamous App Not Responding dialog
             Message msg = Message.obtain();
             HashMap<String, Object> map = new HashMap<String, Object>();
@@ -6293,14 +6315,16 @@ public final class ActivityManagerService extends ActivityManagerNative
 
     @Override
     public void keyguardGoingAway(boolean disableWindowAnimations,
-            boolean keyguardGoingToNotificationShade) {
+            boolean keyguardGoingToNotificationShade,
+            boolean keyguardShowingMedia) {
         enforceNotIsolatedCaller("keyguardGoingAway");
         final long token = Binder.clearCallingIdentity();
         try {
             synchronized (this) {
                 if (DEBUG_LOCKSCREEN) logLockScreen("");
                 mWindowManager.keyguardGoingAway(disableWindowAnimations,
-                        keyguardGoingToNotificationShade);
+                        keyguardGoingToNotificationShade,
+                        keyguardShowingMedia);
                 if (mLockScreenShown == LOCK_SCREEN_SHOWN) {
                     mLockScreenShown = LOCK_SCREEN_HIDDEN;
                     updateSleepIfNeededLocked();
@@ -10222,7 +10246,13 @@ public final class ActivityManagerService extends ActivityManagerNative
 
         if ((info.flags & PERSISTENT_MASK) == PERSISTENT_MASK) {
             app.persistent = true;
-            app.maxAdj = ProcessList.PERSISTENT_PROC_ADJ;
+
+            // The Adj score defines an order of processes to be killed.
+            // If a process is shared by multiple apps, maxAdj must be set by the highest
+            // prioritized app to avoid being killed.
+            if (app.maxAdj >= ProcessList.PERSISTENT_PROC_ADJ) {
+                app.maxAdj = ProcessList.PERSISTENT_PROC_ADJ;
+            }
         }
         if (app.thread == null && mPersistentStartingProcesses.indexOf(app) < 0) {
             mPersistentStartingProcesses.add(app);
