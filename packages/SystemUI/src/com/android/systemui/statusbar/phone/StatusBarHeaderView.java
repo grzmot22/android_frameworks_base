@@ -61,7 +61,7 @@ import android.widget.Toast;
 
 import com.android.internal.util.temasek.WeatherController;
 import com.android.internal.util.temasek.WeatherControllerImpl;
-import com.android.internal.logging.MetricsConstants;
+
 import com.android.internal.util.temasek.WeatherController;
 import com.android.internal.util.temasek.WeatherControllerImpl;
 import com.android.keyguard.KeyguardStatusView;

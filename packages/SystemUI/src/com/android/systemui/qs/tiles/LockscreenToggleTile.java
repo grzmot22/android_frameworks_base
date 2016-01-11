@@ -18,6 +18,10 @@ package com.android.systemui.qs.tiles;
 
 import android.content.Intent;
 import android.os.UserHandle;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+
+import android.widget.Toast;
 import com.android.systemui.R;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.keyguard.KeyguardViewMediator;
