@@ -113,6 +113,9 @@
     <!-- Needed for WallpaperManager.clear in ImageWallpaper.updateWallpaperLocked -->
     <uses-permission android:name="android.permission.SET_WALLPAPER"/>
 
+    <!-- Needed for WallpaperManager.clear in ImageWallpaper.updateWallpaperLocked -->
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+
     <!-- Recents -->
     <uses-permission android:name="android.permission.BIND_APPWIDGET" />
 
@@ -135,14 +138,25 @@
             android:protectionLevel="signature" />
     <uses-permission android:name="com.android.systemui.permission.SELF" />
 
+
     <!-- LiveDisplay -->
     <uses-permission android:name="android.permission.HARDWARE_ABSTRACTION_ACCESS" />
+
+    <!-- Kill app permission -->
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES" />
 
     <!-- Weather -->
     <uses-permission android:name="com.cyanogenmod.lockclock.permission.READ_WEATHER" />
 
     <!-- blur surface -->
     <uses-permission android:name="android.permission.ACCESS_SURFACE_FLINGER" />
+
+    <!-- headset icon -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <!-- Reboot -->
+    <uses-permission android:name="android.permission.REBOOT" />
+    <uses-permission android:name="android.permission.RECOVERY" />
 
     <application
         android:name=".SystemUIApplication"
@@ -173,7 +187,16 @@
             android:process=":screenshot"
             android:exported="false" />
 
+ 	<!-- started from PhoneWindowManager
+             TODO: Should have an android:permission attribute -->
+        <service android:name=".nameless.onthego.OnTheGoService"
+            android:process=":onthego"
+            android:exported="false" />
+
         <service android:name=".LoadAverageService"
+                android:exported="true" />
+
+        <service android:name=".CPUInfoService"
                 android:exported="true" />
 
         <service android:name=".ImageWallpaper"
@@ -199,7 +222,7 @@
         </activity>
 
         <activity android:name=".tuner.TunerActivity"
-                  android:enabled="false"
+                  android:enabled="true"
                   android:icon="@drawable/tuner"
                   android:theme="@android:style/Theme.Material.Settings"
                   android:label="@string/system_ui_tuner"
@@ -209,8 +232,6 @@
                 <action android:name="com.android.settings.action.EXTRA_SETTINGS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <meta-data android:name="com.android.settings.category"
-                    android:value="com.android.settings.category.system" />
         </activity>
 
         <!-- Alternate Recents -->
@@ -392,6 +413,21 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".statusbar.sidebar.SidebarConfigurationActivity"
+             android:label="@string/title_activity_sidebar_configuration"
+             android:taskAffinity=""
+             android:excludeFromRecents="true"
+             android:exported="true">
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+             </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".statusbar.sidebar.SidebarContentProvider"
+            android:authorities="org.chameleonos.sidebar.contentprovider" >
+        </provider>
+
         <activity
             android:name=".settings.BrightnessDialog"
             android:label="@string/quick_settings_brightness_dialog_title"
@@ -437,3 +473,4 @@
 
     </application>
 </manifest>
+

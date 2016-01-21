@@ -25,6 +25,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
@@ -50,6 +52,7 @@ import com.android.systemui.recents.model.RecentsPackageMonitor;
 import com.android.systemui.recents.model.RecentsTaskLoader;
 import com.android.systemui.recents.model.Task;
 import com.android.systemui.recents.model.TaskStack;
+import com.android.systemui.recents.views.RecentsView;
 import com.android.systemui.statusbar.DismissView;
 
 import java.util.ArrayList;
@@ -78,6 +81,8 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
         public void onTaskResize(Task t);
     }
     RecentsConfiguration mConfig;
+
+    RecentsView mView;
 
     TaskStack mStack;
     TaskStackViewLayoutAlgorithm mLayoutAlgorithm;
@@ -358,6 +363,9 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
                     @Override
                     public void onClick(View v) {
                         mStack.removeAllTasks();
+                        if (mView != null) {
+                            mView.updateMemoryStatus();
+                        }
                     }
                 });
                 addView(mDismissAllButton, 0);
@@ -623,6 +631,47 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
         }
         mFocusedTaskIndex = -1;
         mPrevAccessibilityFocusedIndex = -1;
+    }
+
+    private boolean dismissAll() {
+        return Settings.System.getIntForUser(mContext.getContentResolver(),
+            Settings.System.RECENTS_CLEAR_ALL_DISMISS_ALL, 1, UserHandle.USER_CURRENT) == 1;
+    }
+
+    public void dismissAllTasks() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Task> tasks = new ArrayList<Task>();
+                tasks.addAll(mStack.getTasks());
+                if (!dismissAll() && tasks.size() > 1) {
+                    // Ignore the visible foreground task
+                    Task foregroundTask = tasks.get(tasks.size() - 1);
+                    tasks.remove(foregroundTask);
+                }
+
+                // Remove visible TaskViews
+                int childCount = getChildCount();
+                if (!dismissAll() && childCount > 1) childCount--;
+                for (int i = 0; i < childCount; i++) {
+                    TaskView tv = (TaskView) getChildAt(i);
+                    tasks.remove(tv.getTask());
+                    tv.dismissTask();
+                }
+
+                int size = tasks.size();
+
+                if (size > 0) {
+                    // Remove possible alive Tasks
+                    for (int i = 0; i < size; i++) {
+                        Task t = tasks.get(i);
+                        if (mStack.getTasks().contains(t)) {
+                            mStack.removeTask(t);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -1162,7 +1211,6 @@ public class TaskStackView extends FrameLayout implements TaskStack.TaskStackCal
             TaskView frontTv = getChildViewForTask(newFrontMostTask);
             if (frontTv != null) {
                 frontTv.onTaskBound(newFrontMostTask);
-                frontTv.fadeInActionButton(0, mConfig.taskViewEnterFromAppDuration);
             }
         }
 

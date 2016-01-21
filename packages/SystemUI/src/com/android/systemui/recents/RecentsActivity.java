@@ -88,6 +88,8 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
     // Runnable to be executed after we paused ourselves
     Runnable mAfterPauseRunnable;
 
+    private ReferenceCountedTrigger mExitTrigger;
+
     /**
      * A common Runnable to finish Recents either by calling finish() (with a custom animation) or
      * launching Home with some ActivityOptions.  Generally we always launch home when we exit
@@ -98,6 +100,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
     class FinishRecentsRunnable implements Runnable {
         Intent mLaunchIntent;
         ActivityOptions mLaunchOpts;
+        boolean mAbort = false;
 
         /**
          * Creates a finish runnable that starts the specified intent, using the given
@@ -108,8 +111,15 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
             mLaunchOpts = opts;
         }
 
+        public void setAbort(boolean run) {
+            this.mAbort = run;
+        }
+
         @Override
         public void run() {
+            if (mAbort) {
+                return;
+            }
             // Finish Recents
             if (mLaunchIntent != null) {
                 try {
@@ -226,6 +236,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
                         R.anim.recents_to_launcher_enter,
                     mConfig.launchedFromSearchHome ? R.anim.recents_to_search_launcher_exit :
                         R.anim.recents_to_launcher_exit));
+        setFullScreen();
 
         // Mark the task that is the launch target
         int taskStackCount = stacks.size();
@@ -259,6 +270,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
                 }
             });
             mRecentsView.setSearchBarVisibility(View.GONE);
+            findViewById(R.id.floating_action_button).setVisibility(View.GONE);
         } else {
             if (mEmptyView != null) {
                 mEmptyView.setVisibility(View.GONE);
@@ -267,6 +279,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
             boolean showSearchBar = CMSettings.System.getInt(getContentResolver(),
                        CMSettings.System.RECENTS_SHOW_SEARCH_BAR, 1) == 1;
 
+            findViewById(R.id.floating_action_button).setVisibility(View.VISIBLE);
             if (mRecentsView.hasValidSearchBar()) {
                 if (showSearchBar) {
                     mRecentsView.setSearchBarVisibility(View.VISIBLE);
@@ -277,14 +290,6 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
                 if (showSearchBar) {
                     refreshSearchWidgetView();
                 }
-            }
-
-            // Update search bar space height
-            if (showSearchBar) {
-                mConfig.searchBarSpaceHeightPx = getResources().getDimensionPixelSize(
-                    R.dimen.recents_search_bar_space_height);
-            } else {
-                mConfig.searchBarSpaceHeightPx = 0;
             }
         }
 
@@ -337,13 +342,26 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
         return false;
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (!hasFocus && mExitTrigger != null && mExitTrigger.getCount() > 0) {
+            // we are animating recents out and the window has lost focus during the
+            // animation. we need to stop everything we're doing now and get out
+            // without any animations (since we were already animating)
+            mFinishLaunchHomeRunnable.setAbort(true);
+            finish();
+            overridePendingTransition(0, 0);
+        }
+    }
+
     /** Dismisses Recents directly to Home. */
     void dismissRecentsToHomeRaw(boolean animated) {
         if (animated) {
-            ReferenceCountedTrigger exitTrigger = new ReferenceCountedTrigger(this,
+            mExitTrigger = new ReferenceCountedTrigger(this,
                     null, mFinishLaunchHomeRunnable, null);
             mRecentsView.startExitToHomeAnimation(
-                    new ViewAnimation.TaskViewExitContext(exitTrigger));
+                    new ViewAnimation.TaskViewExitContext(mExitTrigger));
         } else {
             mFinishLaunchHomeRunnable.run();
         }
@@ -471,6 +489,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
     protected void onStop() {
         super.onStop();
         MetricsLogger.hidden(this, MetricsLogger.OVERVIEW_ACTIVITY);
+        mExitTrigger = null;
         RecentsTaskLoader loader = RecentsTaskLoader.getInstance();
         SystemServicesProxy ssp = loader.getSystemServicesProxy();
         Recents.notifyVisibilityChanged(this, ssp, false);
@@ -530,6 +549,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
 
         // Animate the SystemUI scrim views
         mScrimViews.startEnterRecentsAnimation();
+        mRecentsView.startFABanimation();
     }
 
     @Override
@@ -590,6 +610,8 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
 
         // Dismiss Recents to the focused Task or Home
         dismissRecentsToFocusedTaskOrHome(true);
+
+        mRecentsView.endFABanimation();
     }
 
     /** Called when debug mode is triggered */
@@ -618,6 +640,18 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
         }
     }
 
+    private void setFullScreen() {
+       if (Settings.System.getInt(getContentResolver(),
+           Settings.System.RECENTS_FULL_SCREEN, 0) == 1) {
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        } else {
+        // do nothing at all for now
+        }
+    }
 
     /**** RecentsResizeTaskDialog ****/
 
@@ -639,21 +673,25 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
     public void onExitToHomeAnimationTriggered() {
         // Animate the SystemUI scrim views out
         mScrimViews.startExitRecentsAnimation();
+        mRecentsView.endFABanimation();
     }
 
     @Override
     public void onTaskViewClicked() {
+        mRecentsView.endFABanimation();
     }
 
     @Override
     public void onTaskLaunchFailed() {
         // Return to Home
         dismissRecentsToHomeRaw(true);
+        mRecentsView.endFABanimation();
     }
 
     @Override
     public void onAllTaskViewsDismissed() {
         mFinishLaunchHomeRunnable.run();
+        mRecentsView.endFABanimation();
     }
 
     @Override
@@ -681,7 +719,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
                     this, searchWidgetId, mSearchWidgetInfo);
             Bundle opts = new Bundle();
             opts.putInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY,
-                    AppWidgetProviderInfo.WIDGET_CATEGORY_SEARCHBOX);
+                    AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN);
             mSearchWidgetHostView.updateAppWidgetOptions(opts);
             // Set the padding to 0 for this search widget
             mSearchWidgetHostView.setPadding(0, 0, 0, 0);

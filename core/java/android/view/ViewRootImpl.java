@@ -1591,7 +1591,7 @@ public final class ViewRootImpl implements ViewParent,
                 if (mPendingConfiguration.seq != 0) {
                     if (DEBUG_CONFIGURATION) Log.v(TAG, "Visible with new config: "
                             + mPendingConfiguration);
-                    updateConfiguration(mPendingConfiguration, !mFirst);
+                    updateConfiguration(new Configuration(mPendingConfiguration), !mFirst);
                     mPendingConfiguration.seq = 0;
                 }
 
@@ -2685,6 +2685,12 @@ public final class ViewRootImpl implements ViewParent,
             // something else, and if it is something else then we could
             // kill stuff (or ourself) for no reason.
             mLayoutRequested = true;    // ask wm for a new surface next time.
+            return false;
+        } catch (IllegalStateException e) {
+            // After queueBuffer has been abandoned, Surface.unlockCanvasAndPost throws IllegalArgumentException.
+            // However, mLockedObject is not clear in Surface.
+            // This will lead to IllegalStateException while calling Surface.lockCanvas.
+            Log.e(TAG, "Could not lock surface after unlockCanvasAndPost failed", e);
             return false;
         }
 

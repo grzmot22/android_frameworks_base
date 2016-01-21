@@ -20,13 +20,18 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QSTileHost;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 
-public class QSSettings extends LinearLayout {
+public class QSSettings extends ScrollView {
+
     private QSTileHost mHost;
 
     private boolean mAdapterEditingState;
@@ -37,6 +42,7 @@ public class QSSettings extends LinearLayout {
 
     public QSSettings(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        setFillViewport(true);
     }
 
     @Override

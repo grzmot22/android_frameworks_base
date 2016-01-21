@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 
-<TextView
+<ImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,4 +25,5 @@
     android:text="@string/recents_empty_message"
     android:fontFamily="sans-serif"
     android:background="@color/recents_empty_background_color"
+    android:src="@drawable/no_recent_apps_logo"
     android:visibility="gone" />

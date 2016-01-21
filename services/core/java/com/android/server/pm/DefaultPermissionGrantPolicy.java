@@ -572,6 +572,27 @@ final class DefaultPermissionGrantPolicy {
                 grantRuntimePermissionsLPw(musicPackage, STORAGE_PERMISSIONS, userId);
             }
 
+            // Chromium Regular
+            PackageParser.Package chromiumRPackage = getDefaultProviderAuthorityPackageLPr(
+                    "org.chromium.chrome", userId);
+            if (chromiumRPackage != null) {
+                grantRuntimePermissionsLPw(chromiumRPackage, CONTACTS_PERMISSIONS, userId);
+            }
+
+            // Chromium Other
+            PackageParser.Package chromiumOPackage = getDefaultProviderAuthorityPackageLPr(
+                    "org.swe.atego.browser", userId);
+            if (chromiumOPackage != null) {
+                grantRuntimePermissionsLPw(chromiumOPackage, CONTACTS_PERMISSIONS, userId);
+            }
+
+            // SaberChrome
+            PackageParser.Package saberChrome = getDefaultProviderAuthorityPackageLPr(
+                    "org.frap129.saberchrome.browser", userId);
+            if (saberChrome != null) {
+                grantRuntimePermissionsLPw(saberChrome, CONTACTS_PERMISSIONS, userId);
+            }
+
             mService.mSettings.onDefaultRuntimePermissionsGrantedLPr(userId);
         }
     }
@@ -811,8 +832,8 @@ final class DefaultPermissionGrantPolicy {
 
                     mService.grantRuntimePermission(pkg.packageName, permission, userId);
                     if (DEBUG) {
-                        Log.i(TAG, "Granted " + permission + " to default handler "
-                                + pkg.packageName);
+                        Log.i(TAG, "Granted " + (systemFixed ? "fixed " : "not fixed ")
+                                + permission + " to default handler " + pkg.packageName);
                     }
 
                     int newFlags = PackageManager.FLAG_PERMISSION_GRANTED_BY_DEFAULT;
@@ -822,6 +843,19 @@ final class DefaultPermissionGrantPolicy {
 
                     mService.updatePermissionFlags(permission, pkg.packageName,
                             newFlags, newFlags, userId);
+                }
+
+                // If a component gets a permission for being the default handler A
+                // and also default handler B, we grant the weaker grant form.
+                if ((flags & PackageManager.FLAG_PERMISSION_GRANTED_BY_DEFAULT) != 0
+                        && (flags & PackageManager.FLAG_PERMISSION_SYSTEM_FIXED) != 0
+                        && !systemFixed) {
+                    if (DEBUG) {
+                        Log.i(TAG, "Granted not fixed " + permission + " to default handler "
+                                + pkg.packageName);
+                    }
+                    mService.updatePermissionFlags(permission, pkg.packageName,
+                            PackageManager.FLAG_PERMISSION_SYSTEM_FIXED, 0, userId);
                 }
             }
         }

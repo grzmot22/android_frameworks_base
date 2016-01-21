@@ -16,6 +16,7 @@
 
 package com.android.server.pm;
 
+import static android.content.pm.PackageManager.INSTALL_SUCCEEDED;
 import static android.content.pm.PackageManager.INSTALL_FAILED_ABORTED;
 import static android.content.pm.PackageManager.INSTALL_FAILED_CONTAINER_ERROR;
 import static android.content.pm.PackageManager.INSTALL_FAILED_INSUFFICIENT_STORAGE;
@@ -173,6 +174,9 @@ public class PackageInstallerSession extends IPackageInstallerSession.Stub {
     private final Handler.Callback mHandlerCallback = new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
+            int returnCode = INSTALL_SUCCEEDED;
+            String completeMsg = null;
+
             synchronized (mLock) {
                 if (msg.obj != null) {
                     mRemoteObserver = (IPackageInstallObserver2) msg.obj;
@@ -181,14 +185,16 @@ public class PackageInstallerSession extends IPackageInstallerSession.Stub {
                 try {
                     commitLocked();
                 } catch (PackageManagerException e) {
-                    final String completeMsg = ExceptionUtils.getCompleteMessage(e);
+                    returnCode = e.error;
+                    completeMsg = ExceptionUtils.getCompleteMessage(e);
                     Slog.e(TAG, "Commit of session " + sessionId + " failed: " + completeMsg);
                     destroyInternal();
-                    dispatchSessionFinished(e.error, completeMsg, null);
                 }
-
-                return true;
             }
+            if (returnCode != INSTALL_SUCCEEDED) {
+                dispatchSessionFinished(returnCode, completeMsg, null);
+            }
+            return true;
         }
     };
 
@@ -222,11 +228,17 @@ public class PackageInstallerSession extends IPackageInstallerSession.Stub {
         // waived if the installer is the device owner.
         DevicePolicyManager dpm = (DevicePolicyManager) mContext.getSystemService(
                 Context.DEVICE_POLICY_SERVICE);
+        final boolean isPermissionGranted =
+                (mPm.checkUidPermission(android.Manifest.permission.INSTALL_PACKAGES, installerUid)
+                        == PackageManager.PERMISSION_GRANTED);
+        final boolean isInstallerRoot = (installerUid == Process.ROOT_UID);
+        final boolean forcePermissionPrompt =
+                (params.installFlags & PackageManager.INSTALL_FORCE_PERMISSION_PROMPT) != 0;
         mIsInstallerDeviceOwner = (dpm != null) && dpm.isDeviceOwnerApp(installerPackageName);
-        if ((mPm.checkUidPermission(android.Manifest.permission.INSTALL_PACKAGES, installerUid)
-                == PackageManager.PERMISSION_GRANTED)
-                || (installerUid == Process.ROOT_UID)
-                || mIsInstallerDeviceOwner) {
+        if ((isPermissionGranted
+                        || isInstallerRoot
+                        || mIsInstallerDeviceOwner)
+                && !forcePermissionPrompt) {
             mPermissionsAccepted = true;
         } else {
             mPermissionsAccepted = false;
@@ -963,7 +975,9 @@ public class PackageInstallerSession extends IPackageInstallerSession.Stub {
 
         if (accepted) {
             // Mark and kick off another install pass
-            mPermissionsAccepted = true;
+            synchronized (mLock) {
+                mPermissionsAccepted = true;
+            }
             mHandler.obtainMessage(MSG_COMMIT).sendToTarget();
         } else {
             destroyInternal();

@@ -430,6 +430,11 @@ public interface WindowManagerPolicy {
         public int getLidState();
 
         /**
+         * Lock the device now.
+         */
+        public void lockDeviceNow();
+
+        /**
          * Returns a code that descripbes whether the camera lens is covered or not.
          */
         public int getCameraLensCoverState();
@@ -1164,6 +1169,11 @@ public interface WindowManagerPolicy {
      * user can start interacting with it.
      */
     public void systemBooted();
+
+    /**
+     * name of package being worked on during boot time message
+     */
+    public void setPackageName(String pkgName);
 
     /**
      * Show boot time message to the user.

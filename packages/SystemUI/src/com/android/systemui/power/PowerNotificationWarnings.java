@@ -137,10 +137,12 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         if (mInvalidCharger) {
             showInvalidChargerNotification();
             mShowing = SHOWING_INVALID_CHARGER;
-        } else if (mWarning) {
+        } else if (mWarning && (Settings.System.getIntForUser(mContext.getContentResolver(),
+        	   Settings.System.BATTERY_LOW_NOTIFICATION, 1, UserHandle.USER_CURRENT) == 1)) {
             showWarningNotification();
             mShowing = SHOWING_WARNING;
-        } else if (mSaver) {
+        } else if (mSaver && (Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.BATTERY_SAVER_NOTIFICATION, 1, UserHandle.USER_CURRENT) == 1)) {
             showSaverNotification();
             mShowing = SHOWING_SAVER;
         } else {
@@ -180,7 +182,6 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
                 .setContentTitle(mContext.getString(R.string.battery_low_title))
                 .setContentText(mContext.getString(textRes, percentage))
                 .setOnlyAlertOnce(true)
-                .setDeleteIntent(pendingBroadcast(ACTION_DISMISSED_WARNING))
                 .setPriority(Notification.PRIORITY_MAX)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setColor(mContext.getColor(
@@ -194,6 +195,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
                     pendingBroadcast(ACTION_START_SAVER));
         } else {
             addStopSaverAction(nb);
+            addDismissAction(nb);
         }
         if (mPlaySound) {
             attachLowBatterySound(nb);
@@ -211,12 +213,12 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
                 .setSmallIcon(R.drawable.ic_power_saver)
                 .setContentTitle(mContext.getString(R.string.battery_saver_notification_title))
                 .setContentText(mContext.getString(R.string.battery_saver_notification_text))
-                .setOngoing(true)
                 .setShowWhen(false)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setColor(mContext.getColor(
                         com.android.internal.R.color.battery_saver_mode_color));
         addStopSaverAction(nb);
+        addDismissAction(nb);
         if (hasSaverSettings()) {
             nb.setContentIntent(pendingActivity(mOpenSaverSettings));
         }
@@ -224,9 +226,15 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     private void addStopSaverAction(Notification.Builder nb) {
-        nb.addAction(0,
-                mContext.getString(R.string.battery_saver_notification_action_text),
+        nb.addAction(R.drawable.battery_saver_turn_off,
+                mContext.getString(R.string.battery_saver_notification_action_text_short),
                 pendingBroadcast(ACTION_STOP_SAVER));
+    }
+
+    private void addDismissAction(Notification.Builder nb) {
+        nb.addAction(R.drawable.battery_saver_dismiss,
+                mContext.getString(R.string.battery_saver_dismiss_title),
+                pendingBroadcast(ACTION_DISMISSED_WARNING));
     }
 
     private void dismissSaverNotification() {
@@ -395,7 +403,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
                 dismissLowBatteryNotification();
                 setSaverMode(false);
             } else if (action.equals(ACTION_DISMISSED_WARNING)) {
-                dismissLowBatteryWarning();
+                dismissSaverNotification();
             }
         }
     }

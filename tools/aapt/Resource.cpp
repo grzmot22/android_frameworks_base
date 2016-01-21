@@ -38,6 +38,13 @@ static const bool kIsDebug = false;
 // Number of threads to use for preprocessing images.
 static const size_t MAX_THREADS = 4;
 
+#ifdef SHOW_EXTENDED_WARNINGS
+#define SHOW_MANIFEST_WARNING
+#define SHOW_UNCOMMENTED_SYMBOL_WARNING
+#define SHOW_LOCALIZATION_WARNINGS
+#define SHOW_DEFAULT_TRANSLATION_WARNINGS
+#endif
+
 // ==========================================================================
 // ==========================================================================
 // ==========================================================================
@@ -334,9 +341,10 @@ static status_t makeFileResources(Bundle* bundle, const sp<AaptAssets>& assets,
         const char16_t* const end = str + baseName.size();
         while (str < end) {
             if (!((*str >= 'a' && *str <= 'z')
+                    || (*str >= 'A' && *str <= 'Z')
                     || (*str >= '0' && *str <= '9')
                     || *str == '_' || *str == '.')) {
-                fprintf(stderr, "%s: Invalid file name: must contain only [a-z0-9_.]\n",
+                fprintf(stderr, "%s: Invalid file name: must contain only [a-zA-Z0-9_.]\n",
                         it.getPath().string());
                 hasErrors = true;
             }
@@ -680,7 +688,7 @@ static bool applyFileOverlay(Bundle *bundle,
                             baseGroup->removeFile(baseFileIndex);
                         } else {
                             // didn't find a match fall through and add it..
-                            if (true || bundle->getVerbose()) {
+                            if (bundle->getVerbose()) {
                                 printf("nothing matches overlay file %s, for flavor %s\n",
                                         overlayGroup->getLeaf().string(),
                                         overlayFiles.keyAt(overlayGroupIndex).toString().string());
@@ -754,9 +762,11 @@ bool addTagAttribute(const sp<XMLNode>& node, const char* ns8,
             return false;
         }
 
+#ifdef SHOW_MANIFEST_WARNING
         fprintf(stderr, "Warning: AndroidManifest.xml already defines %s (in %s);"
                         " using existing value in manifest.\n",
                 String8(attr).string(), String8(ns).string());
+#endif
 
         // don't stop the build.
         return true;
@@ -1047,13 +1057,13 @@ static ssize_t extractPlatformBuildVersion(AssetManager& assets, Bundle* bundle)
     }
 
     ResXMLTree tree;
+    ssize_t result = NO_ERROR;
+    
     Asset* asset = assets.openNonAsset(cookie, "AndroidManifest.xml", Asset::ACCESS_STREAMING);
     if (asset == NULL) {
-        fprintf(stderr, "ERROR: Platform AndroidManifest.xml not found\n");
-        return UNKNOWN_ERROR;
+        return NO_ERROR;
     }
 
-    ssize_t result = NO_ERROR;
     if (tree.setTo(asset->getBuffer(true), asset->getLength()) != NO_ERROR) {
         fprintf(stderr, "ERROR: Platform AndroidManifest.xml is corrupt\n");
         result = UNKNOWN_ERROR;
@@ -2544,9 +2554,11 @@ static status_t writeSymbolClass(
                     "%s/** %s\n",
                     getIndentSpace(indent), cmt.string());
         } else if (sym.isPublic && !includePrivate) {
+#ifdef SHOW_UNCOMMENTED_SYMBOL_WARNING
             sym.sourcePos.warning("No comment for public symbol %s:%s/%s",
                 assets->getPackage().string(), className.string(),
                 String8(sym.name).string());
+#endif
         }
         String16 typeComment(sym.typeComment);
         if (typeComment.size() > 0) {
@@ -2590,9 +2602,11 @@ static status_t writeSymbolClass(
                     getIndentSpace(indent), cmt.string(),
                     getIndentSpace(indent));
         } else if (sym.isPublic && !includePrivate) {
+#ifdef SHOW_UNCOMMENTED_SYMBOL_WARNING
             sym.sourcePos.warning("No comment for public symbol %s:%s/%s",
                 assets->getPackage().string(), className.string(),
                 String8(sym.name).string());
+#endif
         }
         ann.printAnnotations(fp, getIndentSpace(indent));
         fprintf(fp, "%spublic static final String %s=\"%s\";\n",

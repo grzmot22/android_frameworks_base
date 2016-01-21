@@ -92,6 +92,9 @@ import java.util.UUID;
 
 import static com.android.internal.util.cm.PowerMenuConstants.*;
 
+
+import com.android.internal.util.nameless.NamelessActions;
+
 /**
  * Helper to show the global actions dialog.  Each item is an {@link Action} that
  * may show depending on whether the keyguard is showing, and whether the device
@@ -127,6 +130,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
 
     // Power menu customizations
     String mActions;
+    private int mScreenshotDelay;	
 
     /**
      * @param context everything needs a context :(
@@ -199,6 +203,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
 
     private void handleShow() {
         awakenIfNecessary();
+	checkSettings();
         prepareDialog();
 
         // If we only have 1 item and it's a simple press action, just do this action.
@@ -278,6 +283,34 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         onAirplaneModeChanged();
 
         mItems = new ArrayList<Action>();
+
+	// next: On-The-Go, if enabled
+        boolean showOnTheGo = Settings.System.getBoolean(mContext.getContentResolver(),
+                Settings.System.POWER_MENU_ONTHEGO_ENABLED, false);
+        if (showOnTheGo) {
+            mItems.add(
+                new SinglePressAction(com.android.internal.R.drawable.ic_lock_onthego,
+                        R.string.global_action_onthego) {
+
+                        public void onPress() {
+                            NamelessActions.processAction(mContext,
+                                    NamelessActions.ACTION_ONTHEGO_TOGGLE);
+                        }
+
+                        public boolean onLongPress() {
+                            return false;
+                        }
+
+                        public boolean showDuringKeyguard() {
+                            return true;
+                        }
+
+                        public boolean showBeforeProvisioning() {
+                            return true;
+                        }
+                    }
+            );
+        }
 
         String[] actionsArray;
         if (mActions == null) {
@@ -705,7 +738,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
 
                         /* wait for the dialog box to close */
                         try {
-                            Thread.sleep(1000);
+                             Thread.sleep(mScreenshotDelay * 1000);
                         } catch (InterruptedException ie) {
                             // Do nothing
                         }
@@ -728,6 +761,15 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         }
     }
 
+    private void startOnTheGo() {
+        final ComponentName cn = new ComponentName("com.android.systemui",
+                "com.android.systemui.nameless.onthego.OnTheGoService");
+        final Intent startIntent = new Intent();
+        startIntent.setComponent(cn);
+        startIntent.setAction("start");
+        mContext.startService(startIntent);
+    }
+    
     private void prepareDialog() {
         refreshSilentMode();
         mAirplaneModeOn.updateState(mAirplaneState);
@@ -738,6 +780,11 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
             mContext.registerReceiver(mRingerModeReceiver, filter);
         }
     }
+   private void checkSettings() {
+        mScreenshotDelay = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.SCREENSHOT_DELAY, 1);
+    }
+
 
     private void refreshSilentMode() {
         if (!mHasVibrator) {

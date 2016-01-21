@@ -399,6 +399,7 @@ public class KeyguardServiceDelegate {
     public void onBootCompleted() {
         if (mKeyguardService != null) {
             mKeyguardService.onBootCompleted();
+            sendStateChangeBroadcast(true);
         }
         mKeyguardState.bootCompleted = true;
         sendStateChangeBroadcast(true);

@@ -649,9 +649,9 @@ public class WindowManagerService extends IWindowManager.Stub
     PowerManager mPowerManager;
     PowerManagerInternal mPowerManagerInternal;
 
-    float mWindowAnimationScaleSetting = 1.0f;
-    float mTransitionAnimationScaleSetting = 1.0f;
-    float mAnimatorDurationScaleSetting = 1.0f;
+    float mWindowAnimationScaleSetting = 0.75f;
+    float mTransitionAnimationScaleSetting = 0.75f;
+    float mAnimatorDurationScaleSetting = 0.75f;
     boolean mAnimationsDisabled = false;
 
     final InputManagerService mInputManager;
@@ -5690,6 +5690,12 @@ public class WindowManagerService extends IWindowManager.Stub
             // Switch state: AKEY_STATE_UNKNOWN.
             return LID_ABSENT;
         }
+    }
+
+    // Called by window manager policy. Not exposed externally.
+    @Override
+    public void lockDeviceNow() {
+        lockNow(null);
     }
 
     // Called by window manager policy. Not exposed externally.
@@ -12131,5 +12137,11 @@ public class WindowManagerService extends IWindowManager.Stub
                 mAppTransition.registerListenerLocked(listener);
             }
         }
+    }
+
+    /* @hide */
+    @Override
+    public int getSystemUIVisibility() {
+        return mLastStatusBarVisibility;
     }
 }

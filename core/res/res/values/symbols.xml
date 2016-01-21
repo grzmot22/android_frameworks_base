@@ -1256,6 +1256,7 @@
   <java-symbol type="drawable" name="ic_corp_icon" />
   <java-symbol type="drawable" name="ic_corp_statusbar_icon" />
   <java-symbol type="drawable" name="emulator_circular_window_overlay" />
+  <java-symbol type="drawable" name="arter97" />
 
   <java-symbol type="drawable" name="sim_light_blue" />
   <java-symbol type="drawable" name="sim_light_green" />
@@ -1480,6 +1481,7 @@
   <java-symbol type="bool" name="config_enableLockScreenRotation" />
   <java-symbol type="bool" name="config_enableLockScreenTranslucentDecor" />
   <java-symbol type="bool" name="config_enableTranslucentDecor" />
+  <java-symbol type="bool" name="config_lidControlsScreenLock" />
   <java-symbol type="bool" name="config_lidControlsSleep" />
   <java-symbol type="bool" name="config_reverseDefaultRotation" />
   <java-symbol type="bool" name="config_showNavigationBar" />
@@ -1489,10 +1491,6 @@
   <java-symbol type="dimen" name="navigation_bar_height_landscape" />
   <java-symbol type="dimen" name="navigation_bar_width" />
   <java-symbol type="dimen" name="status_bar_height" />
-  <java-symbol type="drawable" name="ic_jog_dial_sound_off" />
-  <java-symbol type="drawable" name="ic_jog_dial_sound_on" />
-  <java-symbol type="drawable" name="ic_jog_dial_unlock" />
-  <java-symbol type="drawable" name="ic_jog_dial_vibrate_on" />
   <java-symbol type="drawable" name="ic_lock_airplane_mode" />
   <java-symbol type="drawable" name="ic_lock_airplane_mode_off" />
   <java-symbol type="drawable" name="ic_lock_power_reboot" />

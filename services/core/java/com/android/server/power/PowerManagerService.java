@@ -41,6 +41,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.pm.ThemeUtils;
 import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.hardware.Sensor;
@@ -180,6 +181,7 @@ public final class PowerManagerService extends SystemService
     private static final int MAX_CPU_BOOST_TIME = 5000000;
 
     private final Context mContext;
+    private Context mUiContext;
     private final ServiceThread mHandlerThread;
     private final PowerManagerHandler mHandler;
 
@@ -204,6 +206,8 @@ public final class PowerManagerService extends SystemService
     private int mButtonBrightnessSettingDefault;
     private int mKeyboardBrightness;
     private int mKeyboardBrightnessSettingDefault;
+
+    private TelephonyManager mTelephonyManager;
 
     private final Object mLock = new Object();
 
@@ -2418,6 +2422,14 @@ public final class PowerManagerService extends SystemService
         updatePowerStateLocked();
     }
 
+    private Context getUiContext() {
+        if (mUiContext == null) {
+            mUiContext = ThemeUtils.createUiContext(mContext);
+            mUiContext.setTheme(android.R.style.Theme_DeviceDefault_Light_DarkActionBar);
+        }
+        return mUiContext != null ? mUiContext : mContext;
+    }
+
     private void shutdownOrRebootInternal(final boolean shutdown, final boolean confirm,
             final String reason, boolean wait) {
         if (mHandler == null || !mSystemReady) {
@@ -2429,9 +2441,9 @@ public final class PowerManagerService extends SystemService
             public void run() {
                 synchronized (this) {
                     if (shutdown) {
-                        ShutdownThread.shutdown(mContext, confirm);
+                        ShutdownThread.shutdown(getUiContext(), confirm);
                     } else {
-                        ShutdownThread.reboot(mContext, reason, confirm);
+                        ShutdownThread.reboot(getUiContext(), reason, confirm);
                     }
                 }
             }
@@ -3418,6 +3430,14 @@ public final class PowerManagerService extends SystemService
             } else {
                 r.run();
             }
+        }
+
+        TelephonyManager getTelephonyManager() {
+            if (mTelephonyManager == null) {
+                mTelephonyManager = (TelephonyManager)mContext.getSystemService(
+                        Context.TELEPHONY_SERVICE);
+            }
+            return mTelephonyManager;
         }
 
         private void runPostProximityCheck(final Runnable r) {

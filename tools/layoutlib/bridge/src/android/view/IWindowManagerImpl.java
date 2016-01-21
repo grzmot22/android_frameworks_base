@@ -511,4 +511,15 @@ public class IWindowManagerImpl implements IWindowManager {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public boolean hasPermanentMenuKey() {
+        return true;
+    }
+
+    /* @hide */
+    @Override
+    public int getSystemUIVisibility() {
+        return 0;
+    }
 }

@@ -220,6 +220,8 @@ import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
 import android.util.Xml;
 import android.view.Display;
+import android.view.WindowManager;
+import android.view.WindowManagerPolicy;
 
 import cyanogenmod.providers.CMSettings;
 import dalvik.system.DexFile;
@@ -246,6 +248,7 @@ import com.android.server.EventLogTags;
 import com.android.server.FgThread;
 import com.android.server.IntentResolver;
 import com.android.server.LocalServices;
+import com.android.server.policy.PhoneWindowManager;
 import com.android.server.ServiceThread;
 import com.android.server.SystemConfig;
 import com.android.server.Watchdog;
@@ -983,6 +986,9 @@ public class PackageManagerService extends IPackageManager.Stub {
 
     // Stores a list of users whose package restrictions file needs to be updated
     private ArraySet<Integer> mDirtyUsers = new ArraySet<Integer>();
+
+    WindowManager mWindowManager;
+    private final WindowManagerPolicy mPolicy; // to set packageName
 
     final private DefaultContainerConnection mDefContainerConn =
             new DefaultContainerConnection();
@@ -1897,6 +1903,8 @@ public class PackageManagerService extends IPackageManager.Stub {
         mOnlyCore = onlyCore;
         mLazyDexOpt = "eng".equals(SystemProperties.get("ro.build.type")) ||
                 ("userdebug".equals(SystemProperties.get("ro.build.type")) &&
+                SystemProperties.getBoolean("persist.sys.lazy.dexopt", false)) ||
+                ("user".equals(SystemProperties.get("ro.build.type")) &&
                 SystemProperties.getBoolean("persist.sys.lazy.dexopt", false));
         mMetrics = new DisplayMetrics();
         mSettings = new Settings(mPackages);
@@ -1940,6 +1948,11 @@ public class PackageManagerService extends IPackageManager.Stub {
             mDefParseFlags = 0;
             mSeparateProcesses = null;
         }
+
+        mWindowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display d = mWindowManager.getDefaultDisplay();
+        mPolicy = new PhoneWindowManager();
+        d.getMetrics(mMetrics);
 
         mInstaller = installer;
         mPackageDexOptimizer = new PackageDexOptimizer(this);
@@ -3890,12 +3903,6 @@ public class PackageManagerService extends IPackageManager.Stub {
             }
 
             PermissionsState permissionsState = sb.getPermissionsState();
-
-            // Only the package manager can change flags for system component permissions.
-            final int flags = permissionsState.getPermissionFlags(bp.name, userId);
-            if ((flags & PackageManager.FLAG_PERMISSION_SYSTEM_FIXED) != 0) {
-                return;
-            }
 
             boolean hadState = permissionsState.getRuntimePermissionState(name, userId) != null;
 
@@ -6423,6 +6430,14 @@ public class PackageManagerService extends IPackageManager.Stub {
         if (DEBUG_DEXOPT) {
             Log.i(TAG, "Optimizing app " + curr + " of " + total + ": " + pkg.packageName);
         }
+        // give the packagename to the PhoneWindowManager
+        ApplicationInfo ai;
+        try {
+            ai = mContext.getPackageManager().getApplicationInfo(pkg.packageName, 0);
+        } catch (Exception e) {
+            ai = null;
+        }
+        mPolicy.setPackageName((String) (ai != null ? mContext.getPackageManager().getApplicationLabel(ai) : pkg.packageName));
         try {
             ActivityManagerNative.getDefault().showBootMessage(
                     mContext.getResources().getString(R.string.android_upgrading_apk,
@@ -7383,7 +7398,6 @@ public class PackageManagerService extends IPackageManager.Stub {
                             if (sysPs.pkg != null && sysPs.pkg.libraryNames != null) {
                                 for (int j=0; j<sysPs.pkg.libraryNames.size(); j++) {
                                     if (name.equals(sysPs.pkg.libraryNames.get(j))) {
-                                        allowed = true;
                                         allowed = true;
                                         break;
                                     }
@@ -10256,7 +10270,7 @@ public class PackageManagerService extends IPackageManager.Stub {
             IPackageInstallObserver2 observer, PackageInstaller.SessionParams params,
             String installerPackageName, int installerUid, UserHandle user) {
         final VerificationParams verifParams = new VerificationParams(null, params.originatingUri,
-                params.referrerUri, installerUid, null);
+                params.referrerUri, params.originatingUid, null);
         verifParams.setInstallerUid(installerUid);
 
         final OriginInfo origin;
@@ -15124,6 +15138,7 @@ public class PackageManagerService extends IPackageManager.Stub {
     public ComponentName getHomeActivities(List<ResolveInfo> allHomeCandidates) {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
 
         final int callingUserId = UserHandle.getCallingUserId();
         List<ResolveInfo> list = queryIntentActivities(intent, null,
