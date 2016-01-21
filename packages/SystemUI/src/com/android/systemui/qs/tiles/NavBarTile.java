@@ -63,11 +63,6 @@ private static final Intent NAVBAR_Settings = new Intent().setComponent(new Comp
         refreshState();
     }
 
-   @Override
-    public int getMetricsCategory() {
-        return MetricsLogger.DONT_TRACK_ME_BRO;
-    }
-
      @Override
     protected void handleSecondaryClick() {
 	mHost.startActivityDismissingKeyguard(NAVBAR_Settings);

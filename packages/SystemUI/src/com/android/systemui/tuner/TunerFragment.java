@@ -45,7 +45,6 @@ public class TunerFragment extends PreferenceFragment {
     private static final String TAG = "TunerFragment";
 
     private static final String KEY_STATUSBAR_BLACKLIST = "statusbar_icon_blacklist";
-    private static final String KEY_DEMO_MODE = "demo_mode";
 
     public static final String SETTING_SEEN_TUNER_WARNING = "seen_tuner_warning";
 
@@ -69,7 +68,6 @@ public class TunerFragment extends PreferenceFragment {
                 return true;
             }
         });
-        findPreference(KEY_DEMO_MODE).setOnPreferenceClickListener(new OnPreferenceClickListener() {
         if (Settings.Secure.getInt(getContext().getContentResolver(), SETTING_SEEN_TUNER_WARNING,
                 0) == 0) {
             new AlertDialog.Builder(getContext())
