@@ -276,6 +276,11 @@ public class ExpandedDesktopTile extends QSTile<QSTile.BooleanState> {
         }
 
         @Override
+        public int getMetricsCategory() {
+            return CMMetricsLogger.DONT_LOG;
+        }
+        
+        @Override
         public StatusBarPanelCustomTile getCustomTile() {
             return null;
         }
