@@ -239,19 +239,6 @@ public class QSTileHost implements QSTile.Host, Tunable {
     }
 
     @Override
-    public void removeCustomTile(StatusBarPanelCustomTile customTile) {
-        if (mCustomTileListenerService != null) {
-            mCustomTileListenerService.removeCustomTile(customTile.getPackage(),
-                    customTile.getTag(), customTile.getId());
-        }
-    }
-
-    @Override
-    public void startActivityDismissingKeyguard(PendingIntent intent) {
-        mStatusBar.postStartActivityDismissingKeyguard(intent);
-    }
-
-    @Override
     public void warn(String message, Throwable t) {
         // already logged
     }

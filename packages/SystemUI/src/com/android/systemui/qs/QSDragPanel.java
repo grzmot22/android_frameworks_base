@@ -1770,32 +1770,6 @@ public class QSDragPanel extends QSPanel implements View.OnDragListener, View.On
         }
     }
 
-    public void updateResources() {
-        final Resources res = mContext.getResources();
-        final int columns = Math.max(1, res.getInteger(R.integer.quick_settings_num_columns));
-        mCellHeight = res.getDimensionPixelSize(R.dimen.qs_tile_height);
-        mCellWidth = (int) (mCellHeight * TILE_ASPECT);
-        mLargeCellHeight = res.getDimensionPixelSize(R.dimen.qs_dual_tile_height);
-        mLargeCellWidth = (int) (mLargeCellHeight * TILE_ASPECT);
-        mPanelPaddingBottom = res.getDimensionPixelSize(R.dimen.qs_panel_padding_bottom);
-        mDualTileUnderlap = res.getDimensionPixelSize(R.dimen.qs_dual_tile_padding_vertical);
-        mBrightnessPaddingTop = res.getDimensionPixelSize(R.dimen.qs_brightness_padding_top);
-        mPageIndicatorHeight = res.getDimensionPixelSize(R.dimen.qs_panel_page_indicator_height);
-        if (isLaidOut()) {
-            if (mColumns != columns) {
-                mColumns = columns;
-                postInvalidate();
-            }
-            for (TileRecord r : mRecords) {
-                r.tile.clearState();
-            }
-            if (mListening) {
-                refreshAllTiles();
-            }
-            updateDetailText();
-        }
-    }
-
     public boolean isAnimating(TileRecord t) {
         return mCurrentlyAnimating.contains(t);
     }

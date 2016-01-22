@@ -393,8 +393,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     // settings
     private QSDragPanel mQSPanel;
     private QSTileHost mQSTileHost;
-    private DevForceNavbarObserver mDevForceNavbarObserver;
-    
+
     // task manager
     private TaskManager mTaskManager;
     private LinearLayout mTaskManagerPanel;
@@ -1206,7 +1205,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 return false;
             }
         });
-        
+
         if (mAssistManager == null) {
             mAssistManager = new AssistManager(this, context);
         }
@@ -1409,6 +1408,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         if (mWeatherController == null) {
             mWeatherController = new WeatherControllerImpl(mContext);
         }
+
         mWeatherTempStyle = Settings.System.getIntForUser(
                 mContext.getContentResolver(), Settings.System.STATUS_BAR_WEATHER_TEMP_STYLE, 0,
                 UserHandle.USER_CURRENT);

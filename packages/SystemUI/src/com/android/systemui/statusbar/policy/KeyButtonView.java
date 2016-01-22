@@ -142,15 +142,6 @@ public class KeyButtonView extends ImageView {
     }
 
     @Override
-    protected void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        if (mContentDescriptionRes != 0) {
-            setContentDescription(mContext.getString(mContentDescriptionRes));
-        }
-    }
-
-    @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
         if (mCode != 0) {

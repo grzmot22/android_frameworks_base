@@ -154,21 +154,6 @@ public class PhoneStatusBarPolicy implements Callback {
         }
     };
 
-    private Runnable mRemoveCastIconRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (DEBUG) Log.v(TAG, "updateCast: hiding icon NOW");
-            mService.setIconVisibility(SLOT_CAST, false);
-        }
-    };
-
-    private final OnQSChanged mQSListener = new OnQSChanged() {
-        @Override
-        public void onQSChanged() {
-            processQSChangedLocked();
-        }
-    };
-
     public PhoneStatusBarPolicy(Context context, CastController cast, HotspotController hotspot,
             UserInfoController userInfoController, BluetoothController bluetooth, SuController su) {
         mContext = context;
