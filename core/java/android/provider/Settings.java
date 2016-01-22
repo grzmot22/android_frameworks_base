@@ -3486,6 +3486,18 @@ public final class Settings {
         public static final String UNLOCK_SOUND = Global.UNLOCK_SOUND;
 
         /**
+         * Give Missed call notifications a breathing effect
+         * @hide
+         */
+        public static final String KEY_MISSED_CALL_BREATH = "missed_call_breath";
+
+        /**
+         * Give Voicemail notifications a breathing effect
+         * @hide
+         */
+        public static final String KEY_VOICEMAIL_BREATH = "voicemail_breath";
+
+        /**
          * Receive incoming SIP calls?
          * 0 = no
          * 1 = yes
@@ -4742,6 +4754,12 @@ public final class Settings {
          * @hide
          */
         public static final String KEYGUARD_TOGGLE_TORCH = "keyguard_toggle_torch";
+
+        /**
+         * Transparent qs header
+         * @hide
+         */
+        public static final String QS_TRANSPARENT_HEADER = "qs_transparent_header";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
