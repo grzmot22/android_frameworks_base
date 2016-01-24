@@ -282,23 +282,11 @@ public final class ShutdownThread extends Thread {
 
             closer.dialog = sConfirmDialog;
             sConfirmDialog.setOnDismissListener(closer);
-
-            attrs.alpha = setRebootDialogAlpha(context);
-
             sConfirmDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
             sConfirmDialog.show();
         } else {
             beginShutdownSequence(context);
         }
-    }
-
-    private static float setRebootDialogAlpha(Context context) {
-        int mRebootDialogAlpha = Settings.System.getInt(
-                context.getContentResolver(),
-                Settings.System.TRANSPARENT_POWER_MENU, 100);
-        double dAlpha = mRebootDialogAlpha / 100.0;
-        float alpha = (float) dAlpha;
-        return alpha;
     }
 
     private static void doSoftReboot() {
@@ -471,8 +459,6 @@ public final class ShutdownThread extends Thread {
             // shutting down.
             pd.setCancelable(false);
             pd.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
-
-            attrs.alpha = setRebootDialogAlpha(context);
 
             pd.show();
         }

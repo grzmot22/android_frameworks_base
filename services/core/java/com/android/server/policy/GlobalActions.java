@@ -130,7 +130,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
 
     // Power menu customizations
     String mActions;
-    private int mScreenshotDelay;
+    private int mScreenshotDelay;	
 
     /**
      * @param context everything needs a context :(
@@ -203,7 +203,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
 
     private void handleShow() {
         awakenIfNecessary();
-        checkSettings();
+	checkSettings();
         prepareDialog();
 
         // If we only have 1 item and it's a simple press action, just do this action.
@@ -214,21 +214,10 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         } else {
             WindowManager.LayoutParams attrs = mDialog.getWindow().getAttributes();
             attrs.setTitle("GlobalActions");
-
-            attrs.alpha = setPowerMenuAlpha();
-
             mDialog.getWindow().setAttributes(attrs);
             mDialog.show();
             mDialog.getWindow().getDecorView().setSystemUiVisibility(View.STATUS_BAR_DISABLE_EXPAND);
         }
-    }
-
-    private float setPowerMenuAlpha() {
-        int mPowerMenuAlpha = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.TRANSPARENT_POWER_MENU, 100);
-        double dAlpha = mPowerMenuAlpha / 100.0;
-        float alpha = (float) dAlpha;
-        return alpha;
     }
 
     private Context getUiContext() {
