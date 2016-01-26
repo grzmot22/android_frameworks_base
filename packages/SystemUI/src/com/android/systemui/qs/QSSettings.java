@@ -36,10 +36,6 @@ public class QSSettings extends ScrollView {
 
     private boolean mAdapterEditingState;
 
-    public QSSettings(Context context) {
-        super(context);
-    }
-
     public QSSettings(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setFillViewport(true);

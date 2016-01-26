@@ -729,13 +729,6 @@ public class QSDragPanel extends QSPanel implements View.OnDragListener, View.On
         mHost.remove(spec);
     }
 
-    public void ensurePagerState() {
-        if (!isShowingDetail()) {
-            final boolean pagingEnabled = getVisibleTilePageCount() > 1 || mDragging || mEditing;
-            mViewPager.setPagingEnabled(pagingEnabled);
-        }
-    }
-
     public int getTilesPerPage(boolean firstPage) {
         if ((!mFirstRowLarge && firstPage) || !firstPage) {
             return QSTileHost.TILES_PER_PAGE + 1;
@@ -855,12 +848,10 @@ public class QSDragPanel extends QSPanel implements View.OnDragListener, View.On
         if (!isShowingDetail() && !isClosingDetail()) {
             mQsPanelTop.bringToFront();
         }
-
-        ensurePagerState();
     }
 
     protected int getRowTop(int row) {
-        int baseHeight = mBrightnessView.getMeasuredHeight();
+        int baseHeight = mQsPanelTop.getMeasuredHeight();
         if (row <= 0) return baseHeight;
         return baseHeight + mLargeCellHeight - mDualTileUnderlap + (row - 1) * mCellHeight;
     }
@@ -1727,22 +1718,6 @@ public class QSDragPanel extends QSPanel implements View.OnDragListener, View.On
                 mHost.setEditing(false);
             }
         }
-    }
-
-    @Override
-    protected void setGridContentVisibility(boolean visible) {
-        int newVis = visible ? VISIBLE : INVISIBLE;
-        for (int i = 0; i < mRecords.size(); i++) {
-            TileRecord tileRecord = mRecords.get(i);
-            if (tileRecord.tileView.getVisibility() != GONE) {
-                tileRecord.tileView.setVisibility(newVis);
-            }
-        }
-        mQsPanelTop.setVisibility(showBrightnessSlider() ? newVis : GONE);
-        if (mGridContentVisible != visible) {
-            MetricsLogger.visibility(mContext, MetricsLogger.QS_PANEL, newVis);
-        }
-        mGridContentVisible = visible;
     }
 
     public void updateResources() {
