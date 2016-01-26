@@ -3411,12 +3411,6 @@ public final class Settings {
         public static final String MUTE_ANNOYING_NOTIFICATIONS_THRESHOLD =
                 "mute_annoying_notifications_threshold";
 
-	/**
-         * Whether to persistently show Add Tile Icon Even When Brightness Slider Is Disabled
-         * @hide
-         */
-        public static final String PERSIST_ADD = "persist_add";
-
         /**
          * Whether to use the proximity sensor to turn the screen on/off during a call
          * @hide
@@ -4010,6 +4004,12 @@ public final class Settings {
          * @hide
          */
         public static final String LOCK_SCREEN_SHOW_WEATHER_LOCATION = "lock_screen_show_weather_location";
+
+        /**
+         * Whether to show the weather update timestamp on the lock screen
+         * @hide
+         */
+        public static final String LOCK_SCREEN_SHOW_WEATHER_TIMESTAMP = "lock_screen_show_weather_timestamp";
 
         /**
          * Weather condition icon on the lock screen

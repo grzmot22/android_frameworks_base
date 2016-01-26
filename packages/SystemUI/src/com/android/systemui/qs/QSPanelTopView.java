@@ -119,9 +119,9 @@ public class QSPanelTopView extends FrameLayout {
         int dh = mHasBrightnessSliderToDisplay ? mBrightnessView.getMeasuredHeight()
                 : mEditing ? mEditTileInstructionView.getMeasuredHeight() : 0;
 
-        mDropTarget.measure(QSDragPanel.exactly(width), QSDragPanel.exactly(dh));
-        mEditTileInstructionView.measure(QSDragPanel.exactly(width), QSDragPanel.exactly(dh));
-        mToastView.measure(QSDragPanel.exactly(width), QSDragPanel.exactly(dh));
+        mDropTarget.measure(QSDragPanel.exactly(width), QSDragPanel.atMost(dh));
+        mEditTileInstructionView.measure(QSDragPanel.exactly(width), QSDragPanel.atMost(dh));
+        mToastView.measure(QSDragPanel.exactly(width), QSDragPanel.atMost(dh));
 
         setMeasuredDimension(width, dh);
     }
@@ -219,6 +219,8 @@ public class QSPanelTopView extends FrameLayout {
                         mBrightnessView.setVisibility(showBrightness ? View.VISIBLE : View.GONE);
                     }
 
+                    mAnimator = null;
+
                     requestLayout();
 
                     if (showToast) {
@@ -295,8 +297,8 @@ public class QSPanelTopView extends FrameLayout {
             super.observe();
 
             ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(CMSettings.Secure.getUriFor(
-                    CMSettings.Secure.QS_USE_MAIN_TILES), false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(CMSettings.System.getUriFor(
+                    CMSettings.System.QS_SHOW_BRIGHTNESS_SLIDER), false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -316,7 +318,12 @@ public class QSPanelTopView extends FrameLayout {
                     CMSettings.System.QS_SHOW_BRIGHTNESS_SLIDER, 1, currentUserId) == 1;
             if (showSlider != mHasBrightnessSliderToDisplay) {
                 mHasBrightnessSliderToDisplay = showSlider;
+                if (mAnimator == null && mBrightnessView != null) {
+                    // no animations, set the visibility manually
+                    mBrightnessView.setVisibility(showSlider ? View.VISIBLE : View.GONE);
+                }
                 requestLayout();
+                animateToState();
             }
         }
     }
