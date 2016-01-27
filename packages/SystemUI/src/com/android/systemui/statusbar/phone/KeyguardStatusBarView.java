@@ -64,8 +64,6 @@ public class KeyguardStatusBarView extends RelativeLayout {
     private int mSystemIconsSwitcherHiddenExpandedMargin;
     private Interpolator mFastOutSlowInInterpolator;
 
-    private UserInfoController mUserInfoController;
-
     private ContentObserver mObserver = new ContentObserver(new Handler()) {
         public void onChange(boolean selfChange, Uri uri) {
             showStatusBarCarrier();
@@ -109,14 +107,6 @@ public class KeyguardStatusBarView extends RelativeLayout {
         mCarrierLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimensionPixelSize(
                         com.android.internal.R.dimen.text_size_small_material));
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (mUserInfoController != null) {
-            mUserInfoController.removeListener(mUserInfoChangedListener);
-        }
     }
 
     private void loadDimens() {
@@ -173,17 +163,13 @@ public class KeyguardStatusBarView extends RelativeLayout {
         mMultiUserSwitch.setUserSwitcherController(controller);
     }
 
-    private UserInfoController.OnUserInfoChangedListener mUserInfoChangedListener =
-            new UserInfoController.OnUserInfoChangedListener() {
-        @Override
-        public void onUserInfoChanged(String name, Drawable picture) {
-            mMultiUserAvatar.setImageDrawable(picture);
-        }
-    };
-
     public void setUserInfoController(UserInfoController userInfoController) {
-        mUserInfoController = userInfoController;
-        userInfoController.addListener(mUserInfoChangedListener);
+        userInfoController.addListener(new UserInfoController.OnUserInfoChangedListener() {
+            @Override
+            public void onUserInfoChanged(String name, Drawable picture) {
+                mMultiUserAvatar.setImageDrawable(picture);
+            }
+        });
     }
 
     public void setKeyguardUserSwitcher(KeyguardUserSwitcher keyguardUserSwitcher) {
@@ -267,5 +253,10 @@ public class KeyguardStatusBarView extends RelativeLayout {
         super.onAttachedToWindow();
         getContext().getContentResolver().registerContentObserver(Settings.System.getUriFor(
                 "status_bar_show_carrier"), false, mObserver);
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
     }
 }
