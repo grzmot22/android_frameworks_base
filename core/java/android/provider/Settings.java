@@ -686,22 +686,6 @@ public final class Settings {
             "android.settings.APP_OPS_SETTINGS";
 
     /**
-     * Activity Action: Show settings for system update functionality.
-     * <p>
-     * In some cases, a matching Activity may not exist, so ensure you
-     * safeguard against this.
-     * <p>
-     * Input: Nothing.
-     * <p>
-     * Output: Nothing.
-     *
-     * @hide
-     */
-    @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
-    public static final String ACTION_SYSTEM_UPDATE_SETTINGS =
-            "android.settings.SYSTEM_UPDATE_SETTINGS";
-
-    /**
      * Activity Action: Show settings to allow configuration of sync settings.
      * <p>
      * In some cases, a matching Activity may not exist, so ensure you
@@ -3867,6 +3851,12 @@ public final class Settings {
          * @hide
          */
         public static final String NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD = "network_traffic_autohide_threshold";
+
+        /**
+         * Whether to disable showing arrows in network traffic indicators
+         * @hide
+         */
+        public static final String NETWORK_TRAFFIC_HIDEARROW = "network_traffic_hidearrow";
 
         /**
          * show clear all recents button
