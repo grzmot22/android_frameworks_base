@@ -2694,7 +2694,8 @@ public class NotificationPanelView extends PanelView implements
             if (liveLockScreenEnabled != mLiveLockScreenEnabled) {
                 mLiveLockScreenEnabled = liveLockScreenEnabled;
                 updateExternalKeyguardView();
-        }
+			}
+		}
     }
 
     private void setQSBackgroundAlpha() {
