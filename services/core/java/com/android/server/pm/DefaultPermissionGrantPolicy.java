@@ -577,9 +577,8 @@ final class DefaultPermissionGrantPolicy {
             // Chromium Regular
             PackageParser.Package chromiumRPackage = getDefaultProviderAuthorityPackageLPr(
                     "org.chromium.chrome", userId);
-            if (chromiumPackage != null) {
-                grantRuntimePermissionsLPw(chromiumPackage, CONTACTS_PERMISSIONS, userId);
-
+            if (chromiumRPackage != null) {
+                grantRuntimePermissionsLPw(chromiumRPackage, CONTACTS_PERMISSIONS, userId);
             }
 
             // Chromium Other
