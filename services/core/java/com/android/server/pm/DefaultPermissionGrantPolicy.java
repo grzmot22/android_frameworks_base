@@ -257,9 +257,8 @@ final class DefaultPermissionGrantPolicy {
                     setupIntent, userId);
             if (setupPackage != null
                     && doesPackageSupportRuntimePermissions(setupPackage)) {
-                grantRuntimePermissionsLPw(setupPackage, PHONE_PERMISSIONS, true, userId);
+                grantRuntimePermissionsLPw(setupPackage, PHONE_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(setupPackage, CONTACTS_PERMISSIONS, userId);
-
             }
 
             // Camera
@@ -593,6 +592,7 @@ final class DefaultPermissionGrantPolicy {
             if (saberChrome != null) {
                 grantRuntimePermissionsLPw(saberChrome, CONTACTS_PERMISSIONS, userId);
             }
+
             mService.mSettings.onDefaultRuntimePermissionsGrantedLPr(userId);
         }
     }
@@ -612,9 +612,7 @@ final class DefaultPermissionGrantPolicy {
         if (doesPackageSupportRuntimePermissions(smsPackage)) {
             grantRuntimePermissionsLPw(smsPackage, PHONE_PERMISSIONS, userId);
             grantRuntimePermissionsLPw(smsPackage, CONTACTS_PERMISSIONS, userId);
-            grantRuntimePermissionsLPw(smsPackage, PHONE_PERMISSIONS, userId);
             grantRuntimePermissionsLPw(smsPackage, SMS_PERMISSIONS, userId);
-            grantRuntimePermissionsLPw(smsPackage, STORAGE_PERMISSIONS, true, userId);
         }
     }
 
