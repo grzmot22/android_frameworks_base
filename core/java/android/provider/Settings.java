@@ -4775,6 +4775,11 @@ public final class Settings {
          * @hide
          */
         public static final String TRANSPARENT_VOLUME_DIALOG = "transparent_volume_dialog";
+		 /**
+         * Show four g instead of lte
+         * @hide
+         */
+        public static final String SHOW_FOURG = "show_fourg";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
