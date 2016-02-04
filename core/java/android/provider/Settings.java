@@ -4771,11 +4771,14 @@ public final class Settings {
         public static final String DASHBOARD_COLUMNS = "dashboard_columns";
 
         /**
+<<<<<<< HEAD
          * Transparent volume dialog
          * @hide
          */
         public static final String TRANSPARENT_VOLUME_DIALOG = "transparent_volume_dialog";
 		 /**
+=======
+>>>>>>> 57a48b4b1973d81d6aa55b802ed12a9771d2a31a
          * Show four g instead of lte
          * @hide
          */

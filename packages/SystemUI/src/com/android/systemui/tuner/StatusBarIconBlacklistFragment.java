@@ -26,7 +26,6 @@ import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
 
-import com.android.internal.util.aicp.AicpUtils;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 
@@ -44,14 +43,10 @@ public class StatusBarIconBlacklistFragment extends PreferenceFragment {
 
         final ContentResolver resolver = getActivity().getContentResolver();
 
-        mShowFourG = (SwitchPreference) findPreference(SHOW_FOURG);
-        if (AicpUtils.isWifiOnly(getActivity())) {
-            prefSet.removePreference(mShowFourG);
-        } else {
+        mShowFourG = (SwitchPreference) findPreference(SHOW_FOURG);     
             mShowFourG.setChecked((Settings.System.getInt(resolver,
                     Settings.System.SHOW_FOURG, 0) == 1));
-        }
-    }
+            }
 
     @Override
     public void onResume() {
