@@ -466,6 +466,9 @@ public class PackageManagerService extends IPackageManager.Stub {
 
     private static final long COMMON_RESOURCE_EXPIRATION = 3*60*1000; // 3 minutes
 
+    private static final String PROTECTED_APPS_TARGET_VALIDATION_COMPONENT =
+                    "com.android.settings/com.android.settings.applications.ProtectedAppsActivity";
+
     /**
      * The offset in bytes to the beginning of the hashes in an idmap
      */
@@ -6346,6 +6349,41 @@ public class PackageManagerService extends IPackageManager.Stub {
                 if (pkgNames.contains(pkg.packageName)) {
                     if (DEBUG_DEXOPT) {
                         Log.i(TAG, "Adding pre boot system app " + sortedPkgs.size() + ": " + pkg.packageName);
+                    }
+                    sortedPkgs.add(pkg);
+                    it.remove();
+                }
+            }
+            // Give priority to system apps.
+            for (Iterator<PackageParser.Package> it = pkgs.iterator(); it.hasNext();) {
+                PackageParser.Package pkg = it.next();
+                if (isSystemApp(pkg) && !pkg.isUpdatedSystemApp()) {
+                    if (DEBUG_DEXOPT) {
+                        Log.i(TAG, "Adding system app " + sortedPkgs.size() + ": " + pkg.packageName);
+                    }
+                    sortedPkgs.add(pkg);
+                    it.remove();
+                }
+            }
+            // Give priority to updated system apps.
+            for (Iterator<PackageParser.Package> it = pkgs.iterator(); it.hasNext();) {
+                PackageParser.Package pkg = it.next();
+                if (pkg.isUpdatedSystemApp()) {
+                    if (DEBUG_DEXOPT) {
+                        Log.i(TAG, "Adding updated system app " + sortedPkgs.size() + ": " + pkg.packageName);
+                    }
+                    sortedPkgs.add(pkg);
+                    it.remove();
+                }
+            }
+            // Give priority to apps that listen for boot complete.
+            intent = new Intent(Intent.ACTION_BOOT_COMPLETED);
+            pkgNames = getPackageNamesForIntent(intent);
+            for (Iterator<PackageParser.Package> it = pkgs.iterator(); it.hasNext();) {
+                PackageParser.Package pkg = it.next();
+                if (pkgNames.contains(pkg.packageName)) {
+                    if (DEBUG_DEXOPT) {
+                        Log.i(TAG, "Adding boot app " + sortedPkgs.size() + ": " + pkg.packageName);
                     }
                     sortedPkgs.add(pkg);
                     it.remove();
@@ -17240,6 +17278,11 @@ public class PackageManagerService extends IPackageManager.Stub {
         //If this component is launched from the same package, allow it.
         if (TextUtils.equals(packageName, callingPackage)) {
             if (DEBUG_PROTECTED) Log.d(TAG, "Calling package is same as target, allow");
+            return false;
+        }
+
+        if (TextUtils.equals(PROTECTED_APPS_TARGET_VALIDATION_COMPONENT,
+                componentName.flattenToString())) {
             return false;
         }
 
