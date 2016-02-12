@@ -4287,27 +4287,6 @@ public final class Settings {
          */
         public static final String LISTVIEW_INTERPOLATOR = "listview_interpolator";
 
-        /**  
-         * AOKP Custom System Animations
-         * @hide
-         */  
-        public static final String[] ACTIVITY_ANIMATION_CONTROLS = new String[] {
-                "activity_open",
-                "activity_close",
-                "task_open",
-                "task_close",
-                "task_to_front",
-                "task_to_back",
-                "wallpaper_open",
-                "wallpaper_close",
-                "wallpaper_intra_open",
-                "wallpaper_intra_close",
-                "task_open_behind",
-        };  
-        public static final String ANIMATION_CONTROLS_DURATION = "animation_controls_duration";
-        public static final String ANIMATION_CONTROLS_EXIT_ONLY = "animation_controls_exit_only";
-        public static final String ANIMATION_CONTROLS_REVERSE_EXIT = "animation_controls_reverse_exit";
-
         /**
          * Override and forcefully disable the fullscreen keyboard
          * @hide
@@ -4825,16 +4804,6 @@ public final class Settings {
          * @hide
          */
         public static final String NOTIFICATION_DRAWER_CLEAR_ALL_ICON_COLOR = "nd_clear_all_icon_color";
-
-        /**
-         * Colors used for the color picker panel puttons
-         * 0: Benzo colors
-         * 1: Material colors
-         * 2: RGB colors
-         * default: 0
-         * @hide
-         */
-        public static final String COLOR_PICKER_PALETTE = "color_picker_palette";
 
         /**
          * Transparent qs shade

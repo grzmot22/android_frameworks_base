@@ -38,7 +38,6 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.Prefs;
 import com.android.systemui.R;
 import com.android.systemui.SystemUIApplication;
-import com.android.systemui.recents.RecentsConfiguration;
 import com.android.systemui.recents.misc.Console;
 import com.android.systemui.recents.misc.DebugTrigger;
 import com.android.systemui.recents.misc.ReferenceCountedTrigger;
@@ -53,7 +52,6 @@ import com.android.systemui.recents.views.SystemBarScrimViews;
 import com.android.systemui.recents.views.ViewAnimation;
 import com.android.systemui.statusbar.phone.NavigationBarView;
 import com.android.systemui.statusbar.phone.PhoneStatusBar;
-import cyanogenmod.providers.CMSettings;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -301,7 +299,6 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
             }
             if (!mConfig.searchBarEnabled) {
                 mRecentsView.setSearchBarVisibility(View.GONE);
-                findViewById(R.id.floating_action_button).setVisibility(View.VISIBLE);
             } else {
                 if (mRecentsView.hasValidSearchBar()) {
                     mRecentsView.setSearchBarVisibility(View.VISIBLE);
