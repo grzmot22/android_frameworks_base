@@ -265,8 +265,6 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     protected int mZenMode;
 
-    protected AppSidebar mAppSidebar;
-    protected int mSidebarPosition;
     protected AppCircleSidebar mAppCircleSidebar;
 
     @ChaosLab(name="GestureAnywhere", classification=Classification.NEW_FIELD)
@@ -2251,7 +2249,9 @@ public abstract class BaseStatusBar extends SystemUI implements
             entry.icon.set(ic);
             inflateViews(entry, mStackScroller);
         }
-        updateHeadsUp(key, entry, shouldInterrupt, alertAgain);
+        if (mUseHeadsUp) {
+            updateHeadsUp(key, entry, shouldInterrupt, alertAgain);
+        }
         mNotificationData.updateRanking(ranking);
         updateNotifications();
 
@@ -2644,16 +2644,6 @@ public abstract class BaseStatusBar extends SystemUI implements
         return lp;
     }
 
-    protected void addSidebarView() {
-        mAppSidebar = (AppSidebar)View.inflate(mContext, R.layout.app_sidebar, null);
-        mWindowManager.addView(mAppSidebar, getAppSidebarLayoutParams(mSidebarPosition));
-    }
-
-    protected void removeSidebarView() {
-        if (mAppSidebar != null)
-            mWindowManager.removeView(mAppSidebar);
-    }
-
     protected void addAppCircleSidebar() {
         if (mAppCircleSidebar == null) {
             mAppCircleSidebar = (AppCircleSidebar) View.inflate(mContext, R.layout.app_circle_sidebar, null);
@@ -2667,28 +2657,7 @@ public abstract class BaseStatusBar extends SystemUI implements
         }
     }
 
- 
-    protected WindowManager.LayoutParams getAppSidebarLayoutParams(int position) {
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
-                LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.TYPE_STATUS_BAR_SUB_PANEL,
-                0
-                | WindowManager.LayoutParams.FLAG_TOUCHABLE_WHEN_WAKING
-                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
-                PixelFormat.TRANSLUCENT);
-        lp.privateFlags |= WindowManager.LayoutParams.PRIVATE_FLAG_NO_MOVE_ANIMATION;
-        lp.gravity = Gravity.TOP;// | Gravity.FILL_VERTICAL;
-        lp.gravity |= position == AppSidebar.SIDEBAR_POSITION_LEFT ? Gravity.LEFT : Gravity.RIGHT;
-        lp.setTitle("AppSidebar");
-
-        return lp;
-    }
-
- protected WindowManager.LayoutParams getAppCircleSidebarLayoutParams() {
+    protected WindowManager.LayoutParams getAppCircleSidebarLayoutParams() {
         int maxWidth =
                 mContext.getResources().getDimensionPixelSize(R.dimen.app_sidebar_trigger_width);
 
