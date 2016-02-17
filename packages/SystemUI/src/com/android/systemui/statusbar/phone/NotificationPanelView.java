@@ -2706,6 +2706,7 @@ public class NotificationPanelView extends PanelView implements
             setQSBackgroundAlpha();
             mQsSmartPullDown = Settings.System.getIntForUser(
                     resolver, Settings.System.QS_SMART_PULLDOWN, 0,
+                    UserHandle.USER_CURRENT);
             boolean liveLockScreenEnabled = CMSettings.Secure.getInt(
                     resolver, CMSettings.Secure.LIVE_LOCK_SCREEN_ENABLED, 0) == 1;
             if (liveLockScreenEnabled != mLiveLockScreenEnabled) {
