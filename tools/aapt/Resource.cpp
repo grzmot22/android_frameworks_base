@@ -2553,12 +2553,10 @@ static status_t writeSymbolClass(
             fprintf(fp,
                     "%s/** %s\n",
                     getIndentSpace(indent), cmt.string());
-        } else if (sym.isPublic && !includePrivate) {
-#ifdef SHOW_UNCOMMENTED_SYMBOL_WARNING
+        } else if (sym.isPublic && !includePrivate && kIsDebug) {
             sym.sourcePos.warning("No comment for public symbol %s:%s/%s",
                 assets->getPackage().string(), className.string(),
                 String8(sym.name).string());
-#endif
         }
         String16 typeComment(sym.typeComment);
         if (typeComment.size() > 0) {
@@ -2601,12 +2599,10 @@ static status_t writeSymbolClass(
                      "%s */\n",
                     getIndentSpace(indent), cmt.string(),
                     getIndentSpace(indent));
-        } else if (sym.isPublic && !includePrivate) {
-#ifdef SHOW_UNCOMMENTED_SYMBOL_WARNING
+        } else if (sym.isPublic && !includePrivate && kIsDebug) {
             sym.sourcePos.warning("No comment for public symbol %s:%s/%s",
                 assets->getPackage().string(), className.string(),
                 String8(sym.name).string());
-#endif
         }
         ann.printAnnotations(fp, getIndentSpace(indent));
         fprintf(fp, "%spublic static final String %s=\"%s\";\n",
