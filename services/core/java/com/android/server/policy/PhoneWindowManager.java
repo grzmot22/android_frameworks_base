@@ -7560,8 +7560,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 mPowerManager.goToSleep(SystemClock.uptimeMillis(),
                         PowerManager.GO_TO_SLEEP_REASON_LID_SWITCH,
                         PowerManager.GO_TO_SLEEP_FLAG_NO_DOZE);
-
-				}
 			} else if (mLidState == LID_CLOSED && mLidControlsScreenLock) {
                 mWindowManagerFuncs.lockDeviceNow();
             }
