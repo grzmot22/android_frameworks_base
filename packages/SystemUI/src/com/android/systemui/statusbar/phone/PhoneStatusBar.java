@@ -637,6 +637,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.NOTIFICATION_DRAWER_CLEAR_ALL_ICON_COLOR))) {
                     UpdateNotifDrawerClearAllIconColor();
             }
+            // lets handle the child notifications now
+            updateNotificationShadeForChildren();
+            // clear the map again for the next usage
+            mTmpChildOrderMap.clear();
             update();
         }
 
@@ -5176,7 +5180,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     }
 
     public boolean onMenuPressed() {
-        return mState == StatusBarState.KEYGUARD && mStatusBarKeyguardViewManager.onMenuPressed();
+       return mState == StatusBarState.KEYGUARD && mStatusBarKeyguardViewManager.isSecure();
     }
 
     public void endAffordanceLaunch() {

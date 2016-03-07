@@ -78,6 +78,7 @@ import java.io.PrintWriter;
 import java.io.OutputStreamWriter;
 
 import com.android.internal.util.temasek.Helpers;
+import org.cyanogenmod.internal.util.ThemeUtils;
 
 import org.cyanogenmod.internal.util.ThemeUtils;
 
