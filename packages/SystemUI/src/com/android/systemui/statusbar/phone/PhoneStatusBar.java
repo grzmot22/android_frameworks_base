@@ -134,7 +134,6 @@ import com.android.internal.statusbar.NotificationVisibility;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.internal.util.cm.ActionUtils;
-import com.android.internal.util.temasek.DUPackageMonitor;
 import com.android.internal.util.temasek.WeatherController;
 import com.android.internal.util.temasek.WeatherController.WeatherInfo;
 import com.android.internal.util.temasek.WeatherControllerImpl;
@@ -195,8 +194,6 @@ import com.android.systemui.statusbar.policy.KeyButtonView;
 import com.android.systemui.statusbar.policy.KeyguardMonitor;
 import com.android.systemui.statusbar.policy.KeyguardUserSwitcher;
 import com.android.systemui.statusbar.policy.LocationControllerImpl;
-import com.android.systemui.statusbar.policy.MinitBattery;
-import com.android.systemui.statusbar.policy.MinitBatteryController;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.NetworkControllerImpl;
 import com.android.systemui.statusbar.policy.NextAlarmController;
@@ -381,7 +378,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     AccessibilityController mAccessibilityController;
     SuControllerImpl mSuController;
     FingerprintUnlockController mFingerprintUnlockController;
-    MinitBatteryController mMinitBatteryController;
 
     int mNaturalBarHeight = -1;
 
@@ -528,8 +524,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     };
 
-    private DUPackageMonitor mPackageMonitor;
-
     // Custom Recents Long Press
     // - Tracks Event state for custom (user-configurable) Long Presses.
     private boolean mCustomRecentsLongPressed = false;
@@ -637,10 +631,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.NOTIFICATION_DRAWER_CLEAR_ALL_ICON_COLOR))) {
                     UpdateNotifDrawerClearAllIconColor();
             }
-            // lets handle the child notifications now
-            updateNotificationShadeForChildren();
-            // clear the map again for the next usage
-            mTmpChildOrderMap.clear();
             update();
         }
 
@@ -1187,9 +1177,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mStatusBarView = (PhoneStatusBarView) mStatusBarWindowContent.findViewById(R.id.status_bar);
         mStatusBarView.setBar(this);
 
-        mPackageMonitor = new DUPackageMonitor();
-        mPackageMonitor.register(mContext, mHandler);
-
         PanelHolder holder = (PanelHolder) mStatusBarWindowContent.findViewById(R.id.panel_holder);
         mStatusBarView.setPanelHolder(holder);
 
@@ -1332,9 +1319,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         // set the inital view visibility
         setAreThereNotifications();
-
-        mMinitBatteryController = new MinitBatteryController(mContext, mStatusBarView, mHeader, mKeyguardStatusBar);
-        mPackageMonitor.addListener(mMinitBatteryController);
 
         mIconController = new StatusBarIconController(
                 mContext, mStatusBarView, mKeyguardStatusBar, this);
@@ -4758,8 +4742,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
         mContext.unregisterReceiver(mBroadcastReceiver);
         mContext.unregisterReceiver(mDemoReceiver);
-        mPackageMonitor.removeListener(mMinitBatteryController);
-        mPackageMonitor.unregister();
         mAssistManager.destroy();
 
         final SignalClusterView signalCluster =
