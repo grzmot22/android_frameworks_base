@@ -131,7 +131,6 @@ public class VolumeDialog {
     private boolean mPendingRecheckAll;
     private long mCollapseTime;
     private int mLastActiveStream;
-
     // Volume dialog alpha
     private int mVolumeDialogAlpha;
 
