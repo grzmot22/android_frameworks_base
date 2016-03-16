@@ -160,7 +160,6 @@ import com.android.systemui.omni.StatusBarHeaderMachine;
 import com.android.systemui.qs.QSDragPanel;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.qs.QSTile;
-import com.android.systemui.recents.RecentsActivity;
 import com.android.systemui.recents.ScreenPinningRequest;
 import com.android.systemui.settings.BrightnessController;
 import com.android.systemui.screenshot.TakeScreenshotService;
@@ -1462,13 +1461,16 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mWeatherTempState = Settings.System.getIntForUser(
                 mContext.getContentResolver(), Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP, 0,
                 UserHandle.USER_CURRENT);
-        mWeatherController = new WeatherControllerImpl(mContext);
-        mWeatherController.addCallback(new WeatherController.Callback() {
-            @Override
-            public void onWeatherChanged(WeatherInfo temp) {
-                updateWeatherTextState(temp.temp, mWeatherTempColor, mWeatherTempSize, mWeatherTempFontStyle);
-            }
-        });
+        if (mWeatherController == null) {
+            mWeatherController = new WeatherControllerImpl(mContext);
+            mWeatherController.addCallback(new WeatherController.Callback() {
+                @Override
+                public void onWeatherChanged(WeatherInfo temp) {
+                    updateWeatherTextState(temp.temp, mWeatherTempColor, mWeatherTempSize, mWeatherTempFontStyle);
+                }
+            });
+        }
+
         updateWeatherTextState(mWeatherController.getWeatherInfo().temp, mWeatherTempColor,
                 mWeatherTempSize, mWeatherTempFontStyle);
 
@@ -3831,8 +3833,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     public void setImeWindowStatus(IBinder token, int vis, int backDisposition,
             boolean showImeSwitcher) {
         boolean imeShown = (vis & InputMethodService.IME_VISIBLE) != 0;
-        int flags = mNavigationBarView != null ?
-                mNavigationBarView.getNavigationIconHints() : mNavigationIconHints;
+        int flags = mNavigationIconHints;
         if ((backDisposition == InputMethodService.BACK_DISPOSITION_WILL_DISMISS) || imeShown) {
             flags |= NAVIGATION_HINT_BACK_ALT;
         } else {
@@ -5587,20 +5588,16 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             }
 
             if (hijackRecentsLongPress) {
-                if (isRecentAppsVisible() && hasRecentApps()) {
-                    clearRecentApps();
-                } else {
-                    // If there is a user-selected, registered handler for the
-                    // recents long press, start the Intent.  Otherwise,
-                    // perform the default action, which is last app switching.
+                // If there is a user-selected, registered handler for the
+                // recents long press, start the Intent.  Otherwise,
+                // perform the default action, which is last app switching.
 
-                    // Copy it so the value doesn't change between now and when the activity is started.
-                    ComponentName customRecentsLongPressHandler = mCustomRecentsLongPressHandler;
-                    if (customRecentsLongPressHandler != null) {
-                        startCustomRecentsLongPressActivity(customRecentsLongPressHandler);
-                    } else {
-                        ActionUtils.switchToLastApp(mContext, mCurrentUserId);
-                    }
+                // Copy it so the value doesn't change between now and when the activity is started.
+                ComponentName customRecentsLongPressHandler = mCustomRecentsLongPressHandler;
+                if (customRecentsLongPressHandler != null) {
+                    startCustomRecentsLongPressActivity(customRecentsLongPressHandler);
+                } else {
+                    ActionUtils.switchToLastApp(mContext, mCurrentUserId);
                 }
             }
         } catch (RemoteException e) {
