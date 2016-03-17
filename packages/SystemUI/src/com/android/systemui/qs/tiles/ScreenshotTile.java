@@ -30,10 +30,10 @@ import android.provider.Settings;
 import android.os.RemoteException;
 import android.view.View;
 
-import org.cyanogenmod.internal.logging.CMMetricsLogger;
 import com.android.systemui.R;
 import com.android.systemui.screenshot.TakeScreenshotService;
 import com.android.systemui.qs.QSTile;
+import org.cyanogenmod.internal.logging.CMMetricsLogger;
 
 /** Quick settings tile: Screenshot **/
 public class ScreenshotTile extends QSTile<QSTile.BooleanState> {

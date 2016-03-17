@@ -38,8 +38,8 @@ import com.android.systemui.qs.QSTileView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.cyanogenmod.internal.logging.CMMetricsLogger;
 import cyanogenmod.providers.CMSettings;
+import org.cyanogenmod.internal.logging.CMMetricsLogger;
 
 public class NavBarTile extends QSTile<QSTile.BooleanState> {
     private boolean mListening;

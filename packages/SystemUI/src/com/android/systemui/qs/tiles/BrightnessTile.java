@@ -26,11 +26,10 @@ import android.net.Uri;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.view.View;
-
-import org.cyanogenmod.internal.logging.CMMetricsLogger;
 import com.android.systemui.R;
 import com.android.systemui.settings.BrightnessController.BrightnessStateChangeCallback;
 import com.android.systemui.qs.QSTile;
+import org.cyanogenmod.internal.logging.CMMetricsLogger;
 
 /** Quick settings tile: Brightness **/
 public class BrightnessTile extends QSTile<QSTile.BooleanState> {

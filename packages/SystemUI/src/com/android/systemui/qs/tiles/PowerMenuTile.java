@@ -30,9 +30,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import org.cyanogenmod.internal.logging.CMMetricsLogger;
 import com.android.systemui.R;
 import com.android.systemui.qs.QSTile;
+import org.cyanogenmod.internal.logging.CMMetricsLogger;
 
 /** Quick settings: Power Menu*/
 public class PowerMenuTile extends QSTile<QSTile.BooleanState> {
