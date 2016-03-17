@@ -766,14 +766,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private boolean mClearedBecauseOfForceShow;
     private boolean mTopWindowIsKeyguard;
     private CMHardwareManager mCMHardware;
-<<<<<<< HEAD
 
     private CameraManager mCameraManager;
     private boolean mTorchEnabled;
     private boolean mIsTorchActive;
     private boolean mWasTorchActive;
-=======
->>>>>>> c1fcac6ddfc114e37abe3205cf2f6aba117c4c7a
 
     private class PolicyHandler extends Handler {
         @Override
@@ -1733,7 +1730,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mDreamManagerInternal = LocalServices.getService(DreamManagerInternal.class);
         mPowerManagerInternal = LocalServices.getService(PowerManagerInternal.class);
         mAppOpsManager = (AppOpsManager) mContext.getSystemService(Context.APP_OPS_SERVICE);
-        mPowerManagerInternal = LocalServices.getService(PowerManagerInternal.class);
         mCameraManager = (CameraManager) mContext.getSystemService(Context.CAMERA_SERVICE);
 
 
@@ -2356,14 +2352,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     mWindowManagerFuncs.registerPointerEventListener(mSystemGestures);
                 }
                 updateEdgeGestureListenerState();
-
-            boolean devForceNavbar = CMSettings.Secure.getIntForUser(resolver,
-                    CMSettings.Secure.DEV_FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) == 1;
-            if (devForceNavbar != mDevForceNavbar) {
-                mDevForceNavbar = devForceNavbar;
-                if (mCMHardware.isSupported(CMHardwareManager.FEATURE_KEY_DISABLE)) {
-                    mCMHardware.set(CMHardwareManager.FEATURE_KEY_DISABLE, mDevForceNavbar);
-                }
             }
 
             mNavigationBarLeftInLandscape = CMSettings.System.getIntForUser(resolver,
@@ -7301,12 +7289,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mKeyguardDelegate = new KeyguardServiceDelegate(mContext);
         mKeyguardDelegate.onSystemReady();
 
-<<<<<<< HEAD
         mEdgeGestureManager = EdgeGestureManager.getInstance();
         mEdgeGestureManager.setEdgeGestureActivationListener(mEdgeGestureActivationListener);
 
-=======
->>>>>>> c1fcac6ddfc114e37abe3205cf2f6aba117c4c7a
         mCMHardware = CMHardwareManager.getInstance(mContext);
         // Ensure observe happens in systemReady() since we need
         // CMHardwareService to be up and running
