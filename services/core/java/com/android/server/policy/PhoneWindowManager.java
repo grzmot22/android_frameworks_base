@@ -766,11 +766,14 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private boolean mClearedBecauseOfForceShow;
     private boolean mTopWindowIsKeyguard;
     private CMHardwareManager mCMHardware;
+<<<<<<< HEAD
 
     private CameraManager mCameraManager;
     private boolean mTorchEnabled;
     private boolean mIsTorchActive;
     private boolean mWasTorchActive;
+=======
+>>>>>>> 43b1779cd44fcd31c2001eeff8d3907dc4b13fad
 
     private class PolicyHandler extends Handler {
         @Override
@@ -1730,6 +1733,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mDreamManagerInternal = LocalServices.getService(DreamManagerInternal.class);
         mPowerManagerInternal = LocalServices.getService(PowerManagerInternal.class);
         mAppOpsManager = (AppOpsManager) mContext.getSystemService(Context.APP_OPS_SERVICE);
+<<<<<<< HEAD
         mCameraManager = (CameraManager) mContext.getSystemService(Context.CAMERA_SERVICE);
 
 
@@ -1740,6 +1744,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         mHandler.post(mScreenshotRunnable);
                     }
                 });
+=======
+        mPowerManagerInternal = LocalServices.getService(PowerManagerInternal.class);
+>>>>>>> 43b1779cd44fcd31c2001eeff8d3907dc4b13fad
 
         // Init display burn-in protection
         boolean burnInProtectionEnabled = context.getResources().getBoolean(
@@ -7289,9 +7296,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mKeyguardDelegate = new KeyguardServiceDelegate(mContext);
         mKeyguardDelegate.onSystemReady();
 
+<<<<<<< HEAD
         mEdgeGestureManager = EdgeGestureManager.getInstance();
         mEdgeGestureManager.setEdgeGestureActivationListener(mEdgeGestureActivationListener);
 
+=======
+>>>>>>> 43b1779cd44fcd31c2001eeff8d3907dc4b13fad
         mCMHardware = CMHardwareManager.getInstance(mContext);
         // Ensure observe happens in systemReady() since we need
         // CMHardwareService to be up and running
