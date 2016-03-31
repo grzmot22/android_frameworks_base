@@ -4656,6 +4656,12 @@ public final class Settings {
         public static final String HEADER_ALARM_FONT_STYLE = "header_alarm_font_style";
 
         /**
+         * Heads up timeout configuration
+         * @hide
+         */
+        public static final String HEADS_UP_TIMEOUT = "heads_up_timeout";
+
+        /**
          * Whether to use slim recents
          * @hide
          */
