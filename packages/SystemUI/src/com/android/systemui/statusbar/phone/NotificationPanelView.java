@@ -2602,7 +2602,6 @@ public class NotificationPanelView extends PanelView implements
             }
             if (mQsPanel != null) {
                 mQsPanel.setQSShadeAlphaValue(mQSShadeAlpha);
-            }
         }
     }
 
