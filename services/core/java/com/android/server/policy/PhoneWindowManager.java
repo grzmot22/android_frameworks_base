@@ -7405,12 +7405,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         }
                     };
                     if (mContext.getPackageManager().isUpgrade()) {
-                        mBootMsgDialog.setTitle(R.string.android_upgrading_title);
+                        mBootMsgDialog.setTitle("Drumpf: \"Make CyanogenMod MOD again\"");
                     } else {
-                        mBootMsgDialog.setTitle(R.string.android_start_title);
+                        mBootMsgDialog.setTitle("Drumpf: \"Make CyanogenMod MOD again\"");
                     }
                     mBootMsgDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                     mBootMsgDialog.setIcon(com.android.internal.R.drawable.arter97);
+                    mBootMsgDialog.setIcon(R.drawable.drumpf_cid);
                     mBootMsgDialog.setIndeterminate(true);
                     mBootMsgDialog.getWindow().setType(
                             WindowManager.LayoutParams.TYPE_BOOT_PROGRESS);
@@ -7432,7 +7433,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 }
                 else {
                     mBootMsgDialog.setMessage("Powered By arter97 optimizations\n\n" + msg   
-                    + "\n\ntemasek cm-13.0 unofficial build");
+                    + "\n\ntemasek OptimizedCM-13.0 build by grzmot22");
                 }
             }
         });
