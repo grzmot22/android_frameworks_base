@@ -22,6 +22,7 @@ import android.app.ActivityManagerInternal.SleepToken;
 import android.app.ActivityManagerNative;
 import android.app.AppOpsManager;
 import android.app.IUiModeManager;
+import android.app.KeyguardManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.app.StatusBarManager;
@@ -766,6 +767,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private boolean mClearedBecauseOfForceShow;
     private boolean mTopWindowIsKeyguard;
     private CMHardwareManager mCMHardware;
+    private boolean mShowKeyguardOnLeftSwipe;
 
     private CameraManager mCameraManager;
     private boolean mTorchEnabled;
@@ -1928,6 +1930,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         if (mNavigationBar != null && !mNavigationBarOnBottom &&
                                 mNavigationBarLeftInLandscape) {
                             requestTransientBars(mNavigationBar);
+                        }
+                        if (mShowKeyguardOnLeftSwipe && isKeyguardShowingOrOccluded()) {
+                            // Show keyguard
+                            mKeyguardDelegate.showKeyguard();
+                            mShowKeyguardOnLeftSwipe = false;
                         }
                     }
                     @Override
@@ -7405,9 +7412,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         }
                     };
                     if (mContext.getPackageManager().isUpgrade()) {
-                        mBootMsgDialog.setTitle("Drumpf: \"Make CyanogenMod MOD again\"");
+                        mBootMsgDialog.setTitle(R.string.android_upgrading_title);
                     } else {
-                        mBootMsgDialog.setTitle("Drumpf: \"Make CyanogenMod MOD again\"");
+                        mBootMsgDialog.setTitle(R.string.android_start_title);
                     }
                     mBootMsgDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                     mBootMsgDialog.setIcon(com.android.internal.R.drawable.arter97);
@@ -8361,5 +8368,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         if (mKeyguardDelegate != null) {
             mKeyguardDelegate.dump(prefix, pw);
         }
+    }
+
+    @Override
+    public void setLiveLockscreenEdgeDetector(boolean enable) {
+        mShowKeyguardOnLeftSwipe = enable;
     }
 }

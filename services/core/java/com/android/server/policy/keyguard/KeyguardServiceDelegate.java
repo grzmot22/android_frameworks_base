@@ -432,4 +432,8 @@ public class KeyguardServiceDelegate {
             mKeyguardService.dump(prefix, pw);
         }
     }
+
+    public void showKeyguard() {
+        mKeyguardService.showKeyguard();
+    }
 }
