@@ -44,7 +44,6 @@ import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.provider.Settings;
-import android.os.RemoteException;
 import android.util.AttributeSet;
 import android.util.MathUtils;
 import android.view.Display;
@@ -267,85 +266,6 @@ public class NotificationPanelView extends PanelView implements
 
     // QS alpha
     private int mQSShadeAlpha;
-    // Used to identify whether showUnlock() can dismiss the keyguard
-    // or not.
-    // TODO - add a new state to make it easier to identify keyguard vs
-    // LiveLockscreen
-    public boolean mCanDismissKeyguard;
-
-    // Used to track which direction the user is currently
-    // interacting with and ensure they don't alternate back
-    // and forth. Reset every MOTION_UP/MOTION_CANCEL
-    private SwipeLockedDirection mLockedDirection;
-
-    private SwipeHelper mSwipeHelper;
-    public boolean mShowingExternalKeyguard;
-    private final int mMinimumFlingVelocity;
-    private final int mScreenHeight;
-    private LiveLockScreenController mLiveLockscreenController;
-    private final GestureDetector mGestureDetector;
-
-    private enum SwipeLockedDirection {
-        UNKNOWN,
-        HORIZONTAL,
-        VERTICAL
-    }
-
-    // Handles swiping to the LiveLockscreen from keyguard
-    SwipeHelper.SimpleCallback mSwipeCallback = new SwipeHelper.SimpleCallback() {
-        @Override
-        public View getChildAtPosition(MotionEvent ev) {
-            return mNotificationStackScroller;
-        }
-
-        @Override
-        public View getChildContentView(View v) {
-            return mNotificationStackScroller;
-        }
-
-        @Override
-        public boolean canChildBeDismissed(View v) {
-            return true;
-        }
-
-        @Override
-        public void onChildDismissed(View v) {
-            mShowingExternalKeyguard = true;
-            mCanDismissKeyguard = false;
-            mStatusBar.focusKeyguardExternalView();
-            resetAlphaTranslation();
-            // Enables the left edge gesture to allow user
-            // to return to keyguard
-            try {
-                WindowManagerGlobal.getWindowManagerService()
-                        .setLiveLockscreenEdgeDetector(true);
-            } catch (RemoteException e){
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public boolean updateSwipeProgress(View animView, boolean dismissable, float swipeProgress) {
-            // Let live lockscreen know of swipe progress to allow
-            // them to translate content in.
-            mLiveLockscreenController.getLiveLockScreenView()
-                    .onLockscreenSlideOffsetChanged(swipeProgress);
-
-            // Ensures the status view and notifications are kept in sync when
-            // being swiped away
-            mKeyguardStatusView.setTranslationX(mNotificationStackScroller.getTranslationX());
-            mKeyguardStatusView.setAlpha(mNotificationStackScroller.getAlpha());
-            return false;
-        }
-
-        private void resetAlphaTranslation() {
-            mNotificationStackScroller.setTranslationX(0);
-            mNotificationStackScroller.setAlpha(1f);
-
-            mKeyguardStatusView.setTranslationX(0);
-            mKeyguardStatusView.setAlpha(1f);
-        }
-    };
 
     // Used to identify whether showUnlock() can dismiss the keyguard
     // or not.
@@ -1076,15 +996,7 @@ public class NotificationPanelView extends PanelView implements
         if (mBlockTouches) {
             return false;
         }
-        int action = event.getActionMasked();
-        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-            mKeyguardBottomArea.expand(false);
-            mKeyguardBottomArea.setBackground(null);
-        }
-
-        if (mDoubleTapToSleepEnabled
-                && mStatusBarState == StatusBarState.KEYGUARD
-                && event.getY() < mStatusBarHeaderHeight) {
+        if (mDoubleTapToSleepEnabled && mStatusBarState == StatusBarState.KEYGUARD) {
             mDoubleTapGesture.onTouchEvent(event);
         }
         initDownStates(event);
@@ -2911,6 +2823,7 @@ public class NotificationPanelView extends PanelView implements
             mQsSmartPullDown = Settings.System.getIntForUser(
                     resolver, Settings.System.QS_SMART_PULLDOWN, 0,
                     UserHandle.USER_CURRENT);
+
             boolean liveLockScreenEnabled = CMSettings.Secure.getInt(
                     resolver, CMSettings.Secure.LIVE_LOCK_SCREEN_ENABLED, 0) == 1;
         }
@@ -2924,6 +2837,7 @@ public class NotificationPanelView extends PanelView implements
             }
             if (mQsPanel != null) {
                 mQsPanel.setQSShadeAlphaValue(mQSShadeAlpha);
+            }
         }
     }
 

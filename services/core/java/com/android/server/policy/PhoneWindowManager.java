@@ -22,7 +22,6 @@ import android.app.ActivityManagerInternal.SleepToken;
 import android.app.ActivityManagerNative;
 import android.app.AppOpsManager;
 import android.app.IUiModeManager;
-import android.app.KeyguardManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.app.StatusBarManager;
@@ -7298,6 +7297,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         mEdgeGestureManager = EdgeGestureManager.getInstance();
         mEdgeGestureManager.setEdgeGestureActivationListener(mEdgeGestureActivationListener);
+
         mCMHardware = CMHardwareManager.getInstance(mContext);
         // Ensure observe happens in systemReady() since we need
         // CMHardwareService to be up and running
@@ -7418,7 +7418,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     }
                     mBootMsgDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                     mBootMsgDialog.setIcon(com.android.internal.R.drawable.arter97);
-                    mBootMsgDialog.setIcon(R.drawable.drumpf_cid);
                     mBootMsgDialog.setIndeterminate(true);
                     mBootMsgDialog.getWindow().setType(
                             WindowManager.LayoutParams.TYPE_BOOT_PROGRESS);
