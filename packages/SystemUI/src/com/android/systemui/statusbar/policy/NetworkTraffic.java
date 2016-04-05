@@ -64,6 +64,7 @@ public class NetworkTraffic extends TextView {
     private boolean mHideArrow;
     private int mAutoHideThreshold;
     private int mNetworkTrafficColor;
+    private int mAutoHideThreshold;
 
     private Handler mTrafficHandler = new Handler() {
         @Override
@@ -273,18 +274,14 @@ public class NetworkTraffic extends TextView {
 
     private void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
-
         int defaultColor = Settings.System.getInt(resolver,
                 Settings.System.NETWORK_TRAFFIC_COLOR, 0xFFFFFFFF);
-
         mAutoHide = Settings.System.getIntForUser(resolver,
                 Settings.System.NETWORK_TRAFFIC_AUTOHIDE, 0,
                 UserHandle.USER_CURRENT) == 1;
-
         mHideArrow = Settings.System.getIntForUser(resolver,
                 Settings.System.NETWORK_TRAFFIC_HIDEARROW, 0,
                 UserHandle.USER_CURRENT) == 1;
-
         mAutoHideThreshold = Settings.System.getIntForUser(resolver,
                 Settings.System.NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD, 10,
                 UserHandle.USER_CURRENT);
@@ -298,7 +295,6 @@ public class NetworkTraffic extends TextView {
                 || mNetworkTrafficColor == -2) {
             mNetworkTrafficColor = defaultColor;
         }
-
             setTextColor(mNetworkTrafficColor);
             updateTrafficDrawable();
 
