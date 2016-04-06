@@ -3766,12 +3766,6 @@ public final class Settings {
         public static final String STATUS_BAR_DATE_FORMAT = "status_bar_date_format";
 
         /**
-         * Switch for clock color
-         * @hide
-         */
-        public static final String STATUSBAR_CLOCKCOLOR_SWITCH = "statusbar_clockcolor_switch";
-
-        /**
          * Setting for clock color
          * @hide
          */
@@ -3788,12 +3782,6 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_CLOCK_FONT_SIZE = "statusbar_clock_font_size";
-
-        /**
-         * Display second in the Clock
-         * @hide
-         */
-        public static final String CLOCK_USE_SECOND = "clock_use_second";
 
         /**
          * Navigation bar height when it is on protrait
@@ -4906,6 +4894,13 @@ public final class Settings {
          * @hide
          */
         public static final String QS_NUM_TILE_COLUMNS = "sysui_qs_num_tile_columns";
+        /**
+         * Snooze time for heads up
+         *
+         * @hide
+         */
+        public static final String HEADS_UP_SNOOZE_LENGTH_MS = "heads_up_snooze_length_ms";
+
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
