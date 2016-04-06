@@ -64,7 +64,6 @@ public class NetworkTraffic extends TextView {
     private boolean mHideArrow;
     private int mAutoHideThreshold;
     private int mNetworkTrafficColor;
-    private int mAutoHideThreshold;
 
     private Handler mTrafficHandler = new Handler() {
         @Override
