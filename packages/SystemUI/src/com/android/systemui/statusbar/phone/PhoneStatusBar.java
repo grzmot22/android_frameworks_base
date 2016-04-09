@@ -158,6 +158,7 @@ import com.android.systemui.recents.ScreenPinningRequest;
 import com.android.systemui.screenshot.TakeScreenshotService;
 import com.android.systemui.statusbar.ActivatableNotificationView;
 import com.android.systemui.statusbar.BackDropView;
+import com.android.systemui.statusbar.AppSidebar;
 import com.android.systemui.statusbar.BaseStatusBar;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.DismissView;
@@ -576,6 +577,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.LOCKSCREEN_BLUR_RADIUS), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.APP_SIDEBAR_POSITION),
+                    false, this, UserHandle.USER_ALL);	
+            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ENABLE_TASK_MANAGER),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -684,6 +688,14 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
             // This method reads CMSettings.Secure.RECENTS_LONG_PRESS_ACTIVITY
             updateCustomRecentsLongPressHandler(false);
+
+            int sidebarPosition = Settings.System.getInt(
+                    resolver, Settings.System.APP_SIDEBAR_POSITION, AppSidebar.SIDEBAR_POSITION_LEFT);
+            if (sidebarPosition != mSidebarPosition) {
+                mSidebarPosition = sidebarPosition;
+                removeSidebarView();
+                addSidebarView();
+            }
 
             mWeatherTempStyle = Settings.System.getIntForUser(
                     resolver, Settings.System.STATUS_BAR_WEATHER_TEMP_STYLE, 0,
@@ -1205,6 +1217,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
 
         addGestureAnywhereView();
+        addSidebarView();
         addAppCircleSidebar();
 
         if (mNavigationBarView == null) {
@@ -1648,6 +1661,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         // receive broadcasts
         IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
@@ -4142,6 +4156,24 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 // detach PA Pie when screen is turned off
                 if (mPieController != null) mPieController.detachPie();
             }
+            else if (Intent.ACTION_CONFIGURATION_CHANGED.equals(action)) {
+                Configuration config = mContext.getResources().getConfiguration();
+                try {
+                    // position app sidebar on left if in landscape orientation and device has a navbar
+                    if (mWindowManagerService.hasNavigationBar() &&
+                            config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        mWindowManager.updateViewLayout(mAppSidebar,
+                                getAppSidebarLayoutParams(AppSidebar.SIDEBAR_POSITION_LEFT));
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mAppSidebar.setPosition(AppSidebar.SIDEBAR_POSITION_LEFT);
+                            }
+                        }, 500);
+                    }
+                } catch (RemoteException e) {
+                }
+            }
             else if (Intent.ACTION_SCREEN_ON.equals(action)) {
                 mScreenOn = true;
                 notifyNavigationBarScreenOn(true);
@@ -5341,6 +5373,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     public void onHintFinished() {
         // Delay the reset a bit so the user can read the text.
         mKeyguardIndicationController.hideTransientIndicationDelayed(HINT_RESET_DELAY_MS);
+        mKeyguardBottomArea.expand(false);
     }
 
     public void onCameraHintStarted(String hint) {
@@ -5538,14 +5571,14 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mDozeScrimController.onScreenTurnedOn();
         mVisualizerView.setVisible(true);
         if (mLiveLockScreenController.isShowingLiveLockScreenView()) {
-            mLiveLockScreenController.getLiveLockScreenView().onScreenTurnedOn();
+            mLiveLockScreenController.onScreenTurnedOn();
         }
     }
 
     public void onScreenTurnedOff() {
         mVisualizerView.setVisible(false);
         if (mLiveLockScreenController.isShowingLiveLockScreenView()) {
-            mLiveLockScreenController.getLiveLockScreenView().onScreenTurnedOff();
+            mLiveLockScreenController.onScreenTurnedOff();
         }
     }
 
