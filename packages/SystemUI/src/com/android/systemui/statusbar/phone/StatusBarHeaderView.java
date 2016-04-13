@@ -1298,30 +1298,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_HEADER_FONT_STYLE), false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HIDE_PANEL_CLOCK), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HIDE_PANEL_DATE), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HIDE_PANEL_CLOCKVALUE), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HIDE_PANEL_BATTERY), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HIDE_PANEL_ICONS), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HIDE_SETTINGS_ICON), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HIDE_USER_ICON), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADER_CLOCK_FONT_STYLE), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HIDE_PANEL_ALARM), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADER_ALARM_FONT_STYLE), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADER_DETAIL_FONT_STYLE), false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADER_ALARM_FONT_STYLE), false, this, UserHandle.USER_ALL);
-	
+                    Settings.System.ENABLE_TASK_MANAGER), false, this);
             update();
         }
 
@@ -1375,6 +1352,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             setStatusBarAlarmFontStyle(mStatusBarHeaderAlarmFont);
             setStatusBarDateFontStyle(mStatusBarHeaderDateFont);
             setStatusBarDetailFontStyle(mStatusBarHeaderDetailFont);	
+
+            mShowTaskManager = Settings.System.getIntForUser(resolver,
+                Settings.System.ENABLE_TASK_MANAGER, 0, currentUserId) == 1;
 
             updateVisibilities();
             requestCaptureValues();
