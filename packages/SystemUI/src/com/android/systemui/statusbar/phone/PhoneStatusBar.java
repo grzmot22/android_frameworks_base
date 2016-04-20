@@ -822,13 +822,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 break;
         }
         mWeatherTempView.setVisibility(View.VISIBLE);
-
-        mNavigationBarView =
-                (NavigationBarView) View.inflate(mContext, R.layout.navigation_bar, null);
-
-        mNavigationBarView.setDisabledFlags(mDisabled1);
-        mNavigationBarView.setBar(this);
-        addNavigationBar(true); // dynamically adding nav bar, reset System UI visibility!
     }
 
     // ensure quick settings is disabled until the current user makes it through the setup wizard
@@ -1111,7 +1104,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         // TODO: use MediaSessionManager.SessionListener to hook us up to future updates
         // in session state
 
-        addNavigationBar(false);
+        addNavigationBar();
 
         SettingsObserver observer = new SettingsObserver(mHandler);
         observer.observe();
@@ -1957,7 +1950,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     }
 
-<<<<<<< HEAD
     private void expandShade() {
             try {
                 IStatusBarService.Stub.asInterface(
@@ -2125,29 +2117,16 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     }
 
     private void prepareNavigationBarView() {
-=======
-    private void prepareNavigationBarView(boolean forceReset) {
->>>>>>> 8bb9f4304ff54a28e548bbaac03d05b5d6fa89c7
         mNavigationBarView.reorient();
 
         mNavigationBarView.setListeners(mRecentsClickListener, mRecentsPreloadOnTouchListener,
                 mLongPressBackRecentsListener, mHomeActionListener, mLongPressHomeListener,
                 mNotificationsClickListener, mNotificationsLongListener , mTorchClickListener ,mCameraClickListener, mScreenShotClickListener ,mImmersiveClickListener);
         mAssistManager.onConfigurationChanged();
-        if (forceReset) {
-            // Nav Bar was added dynamically - we need to reset the mSystemUiVisibility and call
-            // setSystemUiVisibility so that mNavigationBarMode is set to the correct value
-            int newVal = mSystemUiVisibility;
-            mSystemUiVisibility = 0;
-            setSystemUiVisibility(newVal, SYSTEM_UI_VISIBILITY_MASK);
-            checkBarMode(mNavigationBarMode,
-                    mNavigationBarWindowState, mNavigationBarView.getBarTransitions(),
-                    mNoAnimationOnNextBarModeChange);
-        }
     }
 
     // For small-screen devices (read: phones) that lack hardware navigation buttons
-    private void addNavigationBar(boolean forceReset) {
+    private void addNavigationBar() {
         if (DEBUG) Log.v(TAG, "addNavigationBar: about to add " + mNavigationBarView);
         if (mNavigationBarView == null) return;
 
@@ -2158,7 +2137,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             return;
         }
 
-        prepareNavigationBarView(forceReset);
+        prepareNavigationBarView();
 
         mWindowManager.addView(mNavigationBarView, getNavigationBarLayoutParams());
     }
@@ -2166,7 +2145,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private void repositionNavigationBar() {
         if (mNavigationBarView == null || !mNavigationBarView.isAttachedToWindow()) return;
 
-        prepareNavigationBarView(false);
+        prepareNavigationBarView();
 
         mWindowManager.updateViewLayout(mNavigationBarView, getNavigationBarLayoutParams());
     }

@@ -149,9 +149,6 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
     private BitSet mAirplaneModeBits;
     private final List<PhoneStateListener> mPhoneStateListeners = new ArrayList<>();
 
-    private BitSet mAirplaneModeBits;
-    private final List<PhoneStateListener> mPhoneStateListeners = new ArrayList<>();
-
     /**
      * @param context everything needs a context :(
      */
