@@ -106,22 +106,18 @@ public class CellularTile extends QSTile<QSTile.SignalState> {
         MetricsLogger.action(mContext, getMetricsCategory());
         if (mDataController.isMobileDataSupported()) {
 	    if (isFastTile() && !mDataController.isMobileDataEnabled()) {
-		// Fast switch & data off. Enable data.
-                mDataController.setMobileDataEnabled(true);
+		mDataController.setMobileDataEnabled(true);
 	    } else if (isFastTile() && mDataController.isMobileDataEnabled()) {
-		// Fast switch & data on. Disable data.
 		mDataController.setMobileDataEnabled(false);
 	    } else {
-		/* Fast switch off, we don't care about data status.
-		 * Show data usage summary.
-		 */
-		showDetail(true);
+            showDetail(true);
 	    }
         } else {
             mHost.startActivityDismissingKeyguard(DATA_USAGE_SETTINGS);
         }
     }
 
+    
     @Override
     protected void handleSecondaryClick() {
         if (mTelephonyManager.getDefault().getPhoneCount() > 1) {

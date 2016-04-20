@@ -286,7 +286,6 @@ public class NetworkTraffic extends TextView {
                 UserHandle.USER_CURRENT);
 
         mState = Settings.System.getInt(resolver, Settings.System.NETWORK_TRAFFIC_STATE, 0);
-
         mNetworkTrafficColor = Settings.System.getInt(resolver,
                 Settings.System.NETWORK_TRAFFIC_COLOR, -2);
 
