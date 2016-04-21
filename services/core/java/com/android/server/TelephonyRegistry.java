@@ -314,7 +314,6 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
         mDataConnectionNetworkCapabilities = new NetworkCapabilities[numPhones];
         mCellInfo = new ArrayList<List<CellInfo>>();
         for (int i = 0; i < numPhones; i++) {
-            mConnectedApns[i] = new ArrayList<String>();
             mCallState[i] =  TelephonyManager.CALL_STATE_IDLE;
             mDataActivity[i] = TelephonyManager.DATA_ACTIVITY_NONE;
             mDataConnectionState[i] = TelephonyManager.DATA_UNKNOWN;
@@ -328,6 +327,7 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
             mDataConnectionApn[i] =  "";
             mCellLocation[i] = new Bundle();
             mCellInfo.add(i, null);
+            mConnectedApns[i] = new ArrayList<String>();
         }
 
         // Note that location can be null for non-phone builds like
@@ -1057,9 +1057,6 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
         synchronized (mRecords) {
             int phoneId = SubscriptionManager.getPhoneId(subId);
             if (validatePhoneId(phoneId)) {
-                if (VDBG) {
-                    log(" mConnectedApns[" + phoneId + "]="  + mConnectedApns[phoneId].toString());
-                }
                 boolean modified = false;
                 if (state == TelephonyManager.DATA_CONNECTED) {
                     if (!mConnectedApns[phoneId].contains(apnType)) {

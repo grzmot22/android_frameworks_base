@@ -85,7 +85,7 @@ import java.util.NoSuchElementException;
  */
 public class FingerprintService extends SystemService implements IBinder.DeathRecipient {
     private static final String TAG = "FingerprintService";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String FP_DATA_DIR = "fpdata";
     private static final String FINGERPRINTD = "android.hardware.fingerprint.IFingerprintDaemon";
     private static final int MSG_USER_SWITCHING = 10;
@@ -1157,6 +1157,12 @@ public class FingerprintService extends SystemService implements IBinder.DeathRe
                     public void onUserSwitching(int newUserId, IRemoteCallback reply) {
                         mHandler.obtainMessage(MSG_USER_SWITCHING, newUserId, 0 /* unused */)
                                 .sendToTarget();
+                        if (reply != null) {
+                            try {
+                                reply.sendResult(null);
+                            } catch (RemoteException e) {
+                            }
+                        }
                     }
                     @Override
                     public void onUserSwitchComplete(int newUserId) throws RemoteException {
