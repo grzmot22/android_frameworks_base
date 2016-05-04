@@ -4924,6 +4924,13 @@ public final class Settings {
          */
         public static final String TRANSPARENT_VOLUME_DIALOG = "transparent_volume_dialog";
 		 /**
+         *
+         * Whether to show switches for wifi/cell/bt in the settings dashboard
+         * @hide
+         */
+        public static final String DASHBOARD_SWITCHES = "dashboard_switches";
+
+        /**
          * Show four g instead of lte
          * @hide
          */
