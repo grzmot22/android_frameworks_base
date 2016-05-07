@@ -29,7 +29,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/effects/Camera_Click.ogg:system/media/audio/ui/Camera_Click.ogg \
     $(LOCAL_PATH)material/effects/Camera_Focus.ogg:system/media/audio/ui/Camera_Focus.ogg \
     $(LOCAL_PATH)material/effects/Dock.ogg:system/media/audio/ui/Dock.ogg \
-    $(LOCAL_PATH)material/effects/Effect_Tick.ogg:system/media/audio/ui/Effect_Tick.ogg \
     $(LOCAL_PATH)material/effects/KeypressDelete.ogg:system/media/audio/ui/KeypressDelete.ogg \
     $(LOCAL_PATH)material/effects/KeypressInvalid.ogg:system/media/audio/ui/KeypressInvalid.ogg \
     $(LOCAL_PATH)material/effects/KeypressReturn.ogg:system/media/audio/ui/KeypressReturn.ogg \
@@ -44,7 +43,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/effects/NFCTransferInitiated.ogg:system/media/audio/ui/NFCTransferInitiated.ogg \
     $(LOCAL_PATH)material/effects/Trusted.ogg:system/media/audio/ui/Trusted.ogg \
     $(LOCAL_PATH)material/effects/Undock.ogg:system/media/audio/ui/Undock.ogg \
-    $(LOCAL_PATH)material/effects/Unlock.ogg:system/media/audio/ui/Unlock.ogg \
     $(LOCAL_PATH)material/effects/VideoRecord.ogg:system/media/audio/ui/VideoRecord.ogg \
     $(LOCAL_PATH)material/effects/VideoStop.ogg:system/media/audio/ui/VideoStop.ogg \
     $(LOCAL_PATH)material/effects/WirelessChargingStarted.ogg:system/media/audio/ui/WirelessChargingStarted.ogg \
@@ -73,3 +71,50 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/ringtones/Titania.ogg:system/media/audio/ringtones/Titania.ogg \
     $(LOCAL_PATH)material/ringtones/Triton.ogg:system/media/audio/ringtones/Triton.ogg \
     $(LOCAL_PATH)material/ringtones/Umbriel.ogg:system/media/audio/ringtones/Umbriel.ogg \
+    
+#Samsung's Lollipop stock notification sounds
+
+PRODUCT_COPY_FILES += \
+   $(LOCAL_PATH)material/notifications/Beep_once.ogg:system/media/audio/notifications/Beep_once.ogg \
+   $(LOCAL_PATH)material/notifications/Black_watch.ogg:system/media/audio/notifications/Black_watch.ogg \
+   $(LOCAL_PATH)material/notifications/Hang_drum.ogg:system/media/audio/notifications/Hang_drum.ogg \
+   $(LOCAL_PATH)material/notifications/Harp_glissando.ogg:system/media/audio/notifications/Harp_glissando.ogg \
+   $(LOCAL_PATH)material/notifications/S_Bubbles.ogg:system/media/audio/notifications/S_Bubbles.ogg \
+   $(LOCAL_PATH)material/notifications/S_Charming_bell.ogg:system/media/audio/notifications/S_Charming_bell.ogg \
+   $(LOCAL_PATH)material/notifications/S_Chirps.ogg:system/media/audio/notifications/S_Chirps.ogg \
+   $(LOCAL_PATH)material/notifications/S_Dew_drops.ogg:system/media/audio/notifications/S_Dew_drops.ogg \
+   $(LOCAL_PATH)material/notifications/S_Flowers.ogg:system/media/audio/notifications/S_Flowers.ogg \
+   $(LOCAL_PATH)material/notifications/S_Good_News.ogg:system/media/audio/notifications/S_Good_News.ogg \
+   $(LOCAL_PATH)material/notifications/S_Harmonics.ogg:system/media/audio/notifications/S_Harmonics.ogg \
+   $(LOCAL_PATH)material/notifications/S_Knock.ogg:system/media/audio/notifications/S_Knock.ogg \
+   $(LOCAL_PATH)material/notifications/S_On_time.ogg:system/media/audio/notifications/S_On_time.ogg \
+   $(LOCAL_PATH)material/notifications/S_Opener.ogg:system/media/audio/notifications/S_Opener.ogg \
+   $(LOCAL_PATH)material/notifications/S_Postman.ogg:system/media/audio/notifications/S_Postman.ogg \
+   $(LOCAL_PATH)material/notifications/S_Pure_Bell.ogg:system/media/audio/notifications/S_Pure_Bell.ogg \
+   $(LOCAL_PATH)material/notifications/S_Temple_bell.ogg:system/media/audio/notifications/S_Temple_bell.ogg \
+   $(LOCAL_PATH)material/notifications/S_Tickety_tock.ogg:system/media/audio/notifications/S_Tickety_tock.ogg \
+   $(LOCAL_PATH)material/notifications/Sweet_favour.ogg:system/media/audio/notifications/Sweet_favour.ogg \
+   $(LOCAL_PATH)material/notifications/S_Whistle.ogg:system/media/audio/notifications/S_Whistle.ogg \
+   $(LOCAL_PATH)material/notifications/Whisper.ogg:system/media/audio/notifications/Whisper.ogg \
+   
+#Samsung's Lollipop stock alarm sounds
+
+PRODUCT_COPY_FILES += \
+   $(LOCAL_PATH)material/alarms/Alarm_Day_by_day.ogg:system/media/audio/alarms/Alarm_Day_by_day.ogg \
+   $(LOCAL_PATH)material/alarms/Alarm_Morning_flower.ogg:system/media/audio/alarms/Alarm_Morning_flower.ogg \
+   $(LOCAL_PATH)material/alarms/Black_Power_on.ogg:system/media/audio/alarms/Black_Power_on.ogg \
+   $(LOCAL_PATH)material/alarms/Dawn_chorus.ogg:system/media/audio/alarms/Dawn_chorus.ogg \
+   $(LOCAL_PATH)material/alarms/Daybreak.ogg:system/media/audio/alarms/Daybreak.ogg \
+   $(LOCAL_PATH)material/alarms/Sea_breeze.ogg:system/media/audio/alarms/Sea_breeze.ogg \
+   $(LOCAL_PATH)material/alarms/Serene_morning.ogg:system/media/audio/alarms/Serene_morning.ogg \
+   $(LOCAL_PATH)material/alarms/Springtime_memories.ogg:system/media/audio/alarms/Springtime_memories.ogg \
+   $(LOCAL_PATH)material/alarms/Ticktac.ogg:system/media/audio/alarms/Ticktac.ogg \
+   $(LOCAL_PATH)material/alarms/Walk_in_the_forest.ogg:system/media/audio/alarms/Walk_in_the_forest.ogg \
+   
+#Samsung's Lollipop stock UI sounds(Deleting the AOSP ones)
+
+PRODUCT_COPY_FILES += \
+   $(LOCAL_PATH)material/effects/Effect_Tick.ogg:system/media/audio/ui/Effect_Tick.ogg \
+   $(LOCAL_PATH)material/effects/Unlock.ogg:system/media/audio/ui/Unlock.ogg \
+
+   
