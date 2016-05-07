@@ -29,7 +29,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/effects/Camera_Click.ogg:system/media/audio/ui/Camera_Click.ogg \
     $(LOCAL_PATH)material/effects/Camera_Focus.ogg:system/media/audio/ui/Camera_Focus.ogg \
     $(LOCAL_PATH)material/effects/Dock.ogg:system/media/audio/ui/Dock.ogg \
-    $(LOCAL_PATH)material/effects/Effect_Tick.ogg:system/media/audio/ui/Effect_Tick.ogg \
     $(LOCAL_PATH)material/effects/KeypressDelete.ogg:system/media/audio/ui/KeypressDelete.ogg \
     $(LOCAL_PATH)material/effects/KeypressInvalid.ogg:system/media/audio/ui/KeypressInvalid.ogg \
     $(LOCAL_PATH)material/effects/KeypressReturn.ogg:system/media/audio/ui/KeypressReturn.ogg \
@@ -44,7 +43,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/effects/NFCTransferInitiated.ogg:system/media/audio/ui/NFCTransferInitiated.ogg \
     $(LOCAL_PATH)material/effects/Trusted.ogg:system/media/audio/ui/Trusted.ogg \
     $(LOCAL_PATH)material/effects/Undock.ogg:system/media/audio/ui/Undock.ogg \
-    $(LOCAL_PATH)material/effects/Unlock.ogg:system/media/audio/ui/Unlock.ogg \
     $(LOCAL_PATH)material/effects/VideoRecord.ogg:system/media/audio/ui/VideoRecord.ogg \
     $(LOCAL_PATH)material/effects/VideoStop.ogg:system/media/audio/ui/VideoStop.ogg \
     $(LOCAL_PATH)material/effects/WirelessChargingStarted.ogg:system/media/audio/ui/WirelessChargingStarted.ogg \
@@ -113,4 +111,10 @@ PRODUCT_COPY_FILES += \
    $(LOCAL_PATH)material/alarms/Ticktac.ogg:system/media/audio/alarms/Ticktac.ogg \
    $(LOCAL_PATH)material/alarms/Walk_in_the_forest.ogg:system/media/audio/alarms/Walk_in_the_forest.ogg \
    
+#Samsung's Lollipop stock UI sounds(Deleting the AOSP ones)
+
+PRODUCT_COPY_FILES += \
+   $(LOCAL_PATH)material/effects/Effect_Tick.ogg:system/media/audio/ui/Effect_Tick.ogg \
+   $(LOCAL_PATH)material/effects/Unlock.ogg:system/media/audio/ui/Unlock.ogg \
+
    
