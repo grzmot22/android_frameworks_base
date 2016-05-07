@@ -697,6 +697,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 removeSidebarView();
                 addSidebarView();
             }
+    public void setStatusBarViewVisibility(boolean visible) {
+        mStatusBarView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
 
             mWeatherTempStyle = Settings.System.getIntForUser(
                     resolver, Settings.System.STATUS_BAR_WEATHER_TEMP_STYLE, 0,
