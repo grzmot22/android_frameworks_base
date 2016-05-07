@@ -543,10 +543,6 @@ public class NotificationPanelView extends PanelView implements
         return mAfforanceHelper.isSwipingInProgress();
     }
 
-    public boolean isAffordanceSwipeInProgress() {
-        return mAfforanceHelper.isSwipingInProgress();
-    }
-
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
