@@ -3099,7 +3099,8 @@ public final class PowerManagerService extends SystemService
                     handleUserActivityTimeout();
                     break;
                 case MSG_SANDMAN:
-                    handleSandman(msg.arg1 == 1);
+                    boolean fromDreamService = msg.arg1 == 1;
+                    handleSandman(fromDreamService);
                     break;
                 case MSG_SCREEN_BRIGHTNESS_BOOST_TIMEOUT:
                     handleScreenBrightnessBoostTimeout();
