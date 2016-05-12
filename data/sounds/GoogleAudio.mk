@@ -35,7 +35,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/effects/KeypressSpacebar.ogg:system/media/audio/ui/KeypressSpacebar.ogg \
     $(LOCAL_PATH)material/effects/KeypressStandard.ogg:system/media/audio/ui/KeypressStandard.ogg \
     $(LOCAL_PATH)material/effects/Lock.ogg:system/media/audio/ui/Lock.ogg \
-    $(LOCAL_PATH)material/effects/LowBattery.ogg:system/media/audio/ui/LowBattery.ogg \
     $(LOCAL_PATH)material/effects/NFCFailure.ogg:system/media/audio/ui/NFCFailure.ogg \
     $(LOCAL_PATH)material/effects/NFCInitiated.ogg:system/media/audio/ui/NFCInitiated.ogg \
     $(LOCAL_PATH)material/effects/NFCSuccess.ogg:system/media/audio/ui/NFCSuccess.ogg \
@@ -111,10 +110,10 @@ PRODUCT_COPY_FILES += \
    $(LOCAL_PATH)material/alarms/Ticktac.ogg:system/media/audio/alarms/Ticktac.ogg \
    $(LOCAL_PATH)material/alarms/Walk_in_the_forest.ogg:system/media/audio/alarms/Walk_in_the_forest.ogg \
    
-#Samsung's Lollipop stock UI sounds(Deleting the AOSP ones)
-
+#Samsung's Lollipop stock special sounds(Charger plug/unplug , low battery etc)
+   
 PRODUCT_COPY_FILES += \
-   $(LOCAL_PATH)material/effects/Effect_Tick.ogg:system/media/audio/ui/Effect_Tick.ogg \
-   $(LOCAL_PATH)material/effects/Unlock.ogg:system/media/audio/ui/Unlock.ogg \
-
+   $(LOCAL_PATH)material/notifications/Charger_Connection.ogg:system/media/audio/notifications/Charger_Connection.ogg \
+   $(LOCAL_PATH)material/effects/LowBattery.ogg:system/media/audio/ui/LowBattery.ogg \
+   
    
