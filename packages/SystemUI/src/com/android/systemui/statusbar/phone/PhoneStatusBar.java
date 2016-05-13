@@ -1948,6 +1948,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 	}
     };
 
+    //App picker
+    private final View.OnClickListener mAppPickerClickListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            appPicker();
+        }
+    };
+
     private void awakenDreams() {
         if (mDreamManager != null) {
             try {
@@ -2124,12 +2131,19 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     }
 
+    private void appPicker() {
+        Intent intent = new Intent(".temasek.apppicker.AppPickerActivity");
+        startActivity(intent, true);
+    }
+
     private void prepareNavigationBarView(boolean forceReset) {
         mNavigationBarView.reorient();
 
         mNavigationBarView.setListeners(mRecentsClickListener, mRecentsPreloadOnTouchListener,
                 mLongPressBackRecentsListener, mHomeActionListener, mLongPressHomeListener,
-                mNotificationsClickListener, mNotificationsLongListener , mTorchClickListener ,mCameraClickListener, mScreenShotClickListener ,mImmersiveClickListener);
+                mNotificationsClickListener, mNotificationsLongListener, mTorchClickListener,
+                mCameraClickListener, mScreenShotClickListener, mImmersiveClickListener,
+                mAppPickerClickListener);
         mAssistManager.onConfigurationChanged();
         if (forceReset) {
             // Nav Bar was added dynamically - we need to reset the mSystemUiVisibility and call
