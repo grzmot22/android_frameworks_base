@@ -919,6 +919,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ACCELEROMETER_ROTATION_ANGLES), false, this,
                     UserHandle.USER_ALL);
+            resolver.registerContentObserver(CMSettings.Global.getUriFor(
+                    CMSettings.Global.DEV_FORCE_SHOW_NAVBAR), false, this,
+                    UserHandle.USER_ALL);
             resolver.registerContentObserver(CMSettings.System.getUriFor(
                     CMSettings.System.VOLBTN_MUSIC_CONTROLS), false, this,
                     UserHandle.USER_ALL);
@@ -2365,6 +2368,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 } else if (mUsingEdgeGestureServiceForGestures && !useEdgeService) {
                     mUsingEdgeGestureServiceForGestures = false;
                     mWindowManagerFuncs.registerPointerEventListener(mSystemGestures);
+            boolean devForceNavbar = CMSettings.Global.getIntForUser(resolver,
+                    CMSettings.Global.DEV_FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) == 1;
+            if (devForceNavbar != mDevForceNavbar) {
+                mDevForceNavbar = devForceNavbar;
+                if (mCMHardware.isSupported(CMHardwareManager.FEATURE_KEY_DISABLE)) {
+                    mCMHardware.set(CMHardwareManager.FEATURE_KEY_DISABLE, mDevForceNavbar);
                 }
                 updateEdgeGestureListenerState();
             }

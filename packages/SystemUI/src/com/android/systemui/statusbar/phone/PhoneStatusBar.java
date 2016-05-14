@@ -709,6 +709,19 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
             mWeatherTempFontStyle = Settings.System.getIntForUser(resolver,
                     Settings.System.STATUS_BAR_WEATHER_FONT_STYLE, FONT_NORMAL, mCurrentUserId);
+                    
+        @Override
+        protected void observe() {
+            super.observe();
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(CMSettings.Global.getUriFor(
+                    CMSettings.Global.DEV_FORCE_SHOW_NAVBAR), false, this, UserHandle.USER_ALL);
+        }
+
+        @Override
+        public void update() {
+            boolean visible = CMSettings.Global.getIntForUser(mContext.getContentResolver(),
+                    CMSettings.Global.DEV_FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) == 1;
 
             if (mWeatherTempStyle == 0) {
                 mWeatherTempView = (TextView) mStatusBarView.findViewById(R.id.weather_temp);
