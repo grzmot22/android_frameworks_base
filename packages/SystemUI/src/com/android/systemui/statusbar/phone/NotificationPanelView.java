@@ -1402,6 +1402,9 @@ public class NotificationPanelView extends PanelView implements
                 statusBarState == StatusBarState.SHADE_LOCKED) {
             updateDozingVisibilities(false /* animate */);
         }
+        if (statusBarState == StatusBarState.KEYGUARD) {
+            mShowingExternalKeyguard = false;
+        }
         resetVerticalPanelPosition();
         updateQsState();
     }
@@ -1966,10 +1969,6 @@ public class NotificationPanelView extends PanelView implements
         updateNotificationTranslucency();
         updatePanelExpanded();
         mNotificationStackScroller.setShadeExpanded(!isFullyCollapsed());
-        if (mShowingExternalKeyguard && expandedHeight >= getMaxPanelHeight()) {
-            mStatusBar.unfocusKeyguardExternalView();
-            mShowingExternalKeyguard = false;
-        }
         if (DEBUG) {
             invalidate();
         }
