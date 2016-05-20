@@ -1861,11 +1861,14 @@ public class QSDragPanel extends QSPanel implements View.OnDragListener, View.On
         mBrightnessPaddingTop = res.getDimensionPixelSize(R.dimen.qs_brightness_padding_top);
         mPageIndicatorHeight = res.getDimensionPixelSize(R.dimen.qs_panel_page_indicator_height);
         if (isLaidOut()) {
-            updateQSLayout();
+            for (TileRecord r : mRecords) {
+                r.tile.clearState();
+            }
+            updateDetailText();
+            mQsPanelTop.updateResources();
             if (mListening) {
                 refreshAllTiles();
             }
-            updateDetailText();
         }
     }
 
