@@ -272,12 +272,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         updateAvatarScale();
         hidepanelItems();
         setQSHeaderAlpha();
-        setStatusBarClockFontStyle(mStatusBarHeaderClockFont);
-        setStatusBarWeatherFontStyle(mStatusBarHeaderWeatherFont);
         setStatusBarHeaderFontStyle(mStatusBarHeaderFontStyle);
-        setStatusBarAlarmFontStyle(mStatusBarHeaderAlarmFont);
-        setStatusBarDateFontStyle(mStatusBarHeaderDateFont);
-        setStatusBarDetailFontStyle(mStatusBarHeaderDetailFont);
         addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right,
@@ -1325,18 +1320,8 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             mStatusBarHeaderFontStyle = Settings.System.getIntForUser(resolver,
                 Settings.System.STATUS_BAR_HEADER_FONT_STYLE, FONT_NORMAL,
                 UserHandle.USER_CURRENT);
-            mStatusBarHeaderWeatherFont = Settings.System.getIntForUser(resolver,
-                Settings.System.HEADER_WEATHER_FONT_STYLE , FONT_NORMAL,
-                UserHandle.USER_CURRENT);
-            mStatusBarHeaderClockFont =Settings.System.getIntForUser(resolver,
-                Settings.System.HEADER_CLOCK_FONT_STYLE, FONT_NORMAL,
-                UserHandle.USER_CURRENT);
-            setStatusBarHeaderFontStyle(mStatusBarHeaderFontStyle);
-            setStatusBarWeatherFontStyle(mStatusBarHeaderWeatherFont);
-            setStatusBarClockFontStyle(mStatusBarHeaderClockFont);
-            setStatusBarAlarmFontStyle(mStatusBarHeaderAlarmFont);
-            setStatusBarDateFontStyle(mStatusBarHeaderDateFont);
-            setStatusBarDetailFontStyle(mStatusBarHeaderDetailFont);	
+
+            setStatusBarHeaderFontStyle(mStatusBarHeaderFontStyle);	
 
             updateVisibilities();
             requestCaptureValues();
