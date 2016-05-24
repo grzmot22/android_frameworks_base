@@ -3650,13 +3650,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             // Disable app switch key if hw keys is set to off
             if (scanCode != 0 && !hasHwKeysEnabled()) {
                 Log.i(TAG, "Ignoring App Switch Key: we have hw keys disabled");
-            if (mTopFullscreenOpaqueWindowState != null &&
-                    (mTopFullscreenOpaqueWindowState.getAttrs().privateFlags
-                            & WindowManager.LayoutParams.PRIVATE_FLAG_PREVENT_SYSTEM_KEYS) != 0
-                    && mScreenOnFully) {
                 return 0;
             }
-
             if (!keyguardOn) {
                 if (down) {
                     if (mPressOnAppSwitchBehavior == KEY_ACTION_APP_SWITCH
