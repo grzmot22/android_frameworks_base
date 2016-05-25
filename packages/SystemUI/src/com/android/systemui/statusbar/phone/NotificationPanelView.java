@@ -441,6 +441,7 @@ public class NotificationPanelView extends PanelView implements
         mKeyguardStatusView = (KeyguardStatusView) findViewById(R.id.keyguard_status_view);
         mQsContainer = (QSContainer) findViewById(R.id.quick_settings_container);
         mQsPanel = (QSDragPanel) findViewById(R.id.quick_settings_panel);
+        mQsPanel.setPanelView(this);
         mTaskManagerPanel = (LinearLayout) findViewById(R.id.task_manager_panel);
         mClipper = new QSDetailClipper(mTaskManagerPanel);
         mQsPanel.setPanelView(this);
