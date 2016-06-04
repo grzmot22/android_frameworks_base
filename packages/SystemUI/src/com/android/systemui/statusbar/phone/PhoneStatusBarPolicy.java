@@ -206,7 +206,7 @@ public class PhoneStatusBarPolicy implements Callback {
         mContext.getContentResolver().registerContentObserver(
                 Settings.System.getUriFor(Settings.System.SHOW_HEADSET_ICON),
                 false, mSettingsObserver);
-
+	
         // zen
         mService.setIcon(SLOT_ZEN, R.drawable.stat_sys_zen_important, 0, null);
         mService.setIconVisibility(SLOT_ZEN, false);
@@ -273,6 +273,7 @@ public class PhoneStatusBarPolicy implements Callback {
             onChange(selfChange, null);
         }
     };
+    
 
     private final void updateHeadset(Intent intent) {
         int state = intent.getIntExtra("state", 0);
