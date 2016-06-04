@@ -5311,13 +5311,6 @@ public final class Settings {
         public static void getCloneToManagedProfileSettings(Set<String> outKeySet) {
             outKeySet.addAll(CLONE_TO_MANAGED_PROFILE);
         }
-	
-	/**
-         * Enable double tap gesture anywhere on the lock screen put device to sleep
-         * @hide
-         */
-        public static final String DOUBLE_TAP_SLEEP_ANYWHERE = "double_tap_sleep_anywhere";
-
 
         /**
          * When to use Wi-Fi calling
