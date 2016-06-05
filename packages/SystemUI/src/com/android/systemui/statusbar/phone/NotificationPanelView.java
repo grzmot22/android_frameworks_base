@@ -87,9 +87,7 @@ import com.android.systemui.statusbar.policy.KeyguardUserSwitcher;
 import com.android.systemui.statusbar.policy.LiveLockScreenController;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.stack.StackStateAnimator;
-import android.provider.Settings;
- import cyanogenmod.externalviews.KeyguardExternalView;
- 
+
 import cyanogenmod.providers.CMSettings;
 
 import java.util.List;
@@ -446,7 +444,6 @@ public class NotificationPanelView extends PanelView implements
         mQsPanel.setPanelView(this);
         mTaskManagerPanel = (LinearLayout) findViewById(R.id.task_manager_panel);
         mClipper = new QSDetailClipper(mTaskManagerPanel);
-        mQsPanel.setPanelView(this);
         mClockView = (TextView) findViewById(R.id.clock_view);
         mScrollView = (ObservableScrollView) findViewById(R.id.scroll_view);
         mScrollView.setFocusable(false);
@@ -1031,16 +1028,12 @@ public class NotificationPanelView extends PanelView implements
         if (mBlockTouches) {
             return false;
         }
-        int action = event.getActionMasked();
-        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-            mKeyguardBottomArea.setBackground(null);
-        }
-
         if (mDoubleTapToSleepEnabled && mStatusBarState == StatusBarState.KEYGUARD) {
             mDoubleTapGesture.onTouchEvent(event);
         } else if (mDoubleTapToSleepAnywhere
                 && mStatusBarState == StatusBarState.KEYGUARD) {
             mDoubleTapGesture.onTouchEvent(event);
+        }
         initDownStates(event);
         if (mListenForHeadsUp && !mHeadsUpTouchHelper.isTrackingHeadsUp()
                 && mHeadsUpTouchHelper.onInterceptTouchEvent(event)) {
