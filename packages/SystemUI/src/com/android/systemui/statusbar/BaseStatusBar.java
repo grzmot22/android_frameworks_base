@@ -2726,7 +2726,6 @@ public abstract class BaseStatusBar extends SystemUI implements
             mAssistManager.startAssist(args);
         }
     }
-
     @ChaosLab(name="GestureAnywhere", classification=Classification.NEW_METHOD)
     protected void addGestureAnywhereView() {
         if (mGestureAnywhereView == null) {
